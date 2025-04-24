@@ -6,11 +6,11 @@ plugins {
     id "com.gorylenko.gradle-git-properties"
     alias(libs.plugins.spring.boot)
     id "jhipster.openapi-generator-conventions"
-    id "jhipster.cucumber-conventions"
+    // id "jhipster.cucumber-conventions"
     id "jhipster.gatling-conventions"
     id "jhipster.spring-cache-conventions"
     id "jhipster.docker-conventions"
-    id "jhipster.code-quality-conventions"
+    //id "jhipster.code-quality-conventions"
     id "org.liquibase.gradle"
     id "jhipster.node-gradle-conventions"
     // jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
@@ -21,8 +21,10 @@ version = "0.0.1-SNAPSHOT"
 
 description = ""
 
-sourceCompatibility=17
-targetCompatibility=17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 assert System.properties["java.specification.version"] == "17" || "21" || "24"
 
 ext {
@@ -91,7 +93,7 @@ test {
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
     reports.html.required = false
-    testLogging.exceptionFormat "full"
+    testLogging.exceptionFormat = "full"
 }
 
 check.dependsOn integrationTest

@@ -11,7 +11,7 @@ jacoco {
 }
 
 jacocoTestReport {
-    executionData tasks.withType(Test)
+    executionData = tasks.withType(Test)
     classDirectories.from = files(sourceSets.main.output.classesDirs)
     sourceDirectories.from = files(sourceSets.main.java.srcDirs)
 
@@ -35,7 +35,7 @@ file("sonar-project.properties").withReader {
 
 spotless {
     java {
-        target 'src/*/java/**/*.java'
+        target = 'src/*/java/**/*.java'
         // removeUnusedImports()
     }
 }
@@ -47,12 +47,12 @@ modernizer {
 
 checkstyle {
     toolVersion "${libs.versions.checkstyle.get()}"
-    configFile file("checkstyle.xml")
+    configFile = file("checkstyle.xml")
     checkstyleTest.enabled = false
 }
 
 nohttp {
-    source.include "build.gradle", "README.md"
+    source.include = ["build.gradle", "README.md"]
 }
 
 // workaround for https://github.com/checkstyle/checkstyle/issues/14123
