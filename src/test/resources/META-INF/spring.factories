@@ -1,0 +1,4 @@
+org.springframework.test.context.ContextCustomizerFactory = \
+    com.allomed.app.config.SqlTestContainersSpringContextCustomizerFactory,com.\
+    allomed.app.config.TestContainersSpringContextCustomizerFactory,com.allomed.\
+    app.config.RedisTestContainersSpringContextCustomizerFactory
