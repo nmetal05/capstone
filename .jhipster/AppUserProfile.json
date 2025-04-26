@@ -1,0 +1,46 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140909"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "latitude",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "longitude",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "lastLoginIp",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUserAgent",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastLoginDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "AppUserProfile",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "options": {
+        "id": true,
+        "onDelete": "CASCADE"
+      },
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "relationshipName": "internalUser",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipWithBuiltInEntity": true
+    }
+  ],
+  "service": "serviceImpl"
+}

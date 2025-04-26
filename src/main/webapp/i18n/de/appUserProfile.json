@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "appUserProfile": {
+      "home": {
+        "title": "App User Profiles",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "App User Profile erstellen",
+        "createOrEditLabel": "App User Profile erstellen oder bearbeiten",
+        "search": "Suche nach App User Profile",
+        "notFound": "Keine App User Profiles gefunden"
+      },
+      "created": "App User Profile erstellt mit ID {{ param }}",
+      "updated": "App User Profile aktualisiert mit ID {{ param }}",
+      "deleted": "App User Profile gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll App User Profile {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "App User Profile"
+      },
+      "id": "ID",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "lastLoginIp": "Last Login Ip",
+      "lastUserAgent": "Last User Agent",
+      "lastLoginDate": "Last Login Date",
+      "internalUser": "Internal User"
+    }
+  }
+}

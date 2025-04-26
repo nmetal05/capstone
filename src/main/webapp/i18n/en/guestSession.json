@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "guestSession": {
+      "home": {
+        "title": "Guest Sessions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Guest Session",
+        "createOrEditLabel": "Create or edit a Guest Session",
+        "search": "Search for Guest Session",
+        "notFound": "No Guest Sessions found"
+      },
+      "created": "A new Guest Session is created with identifier {{ param }}",
+      "updated": "A Guest Session is updated with identifier {{ param }}",
+      "deleted": "A Guest Session is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Guest Session {{ id }}?"
+      },
+      "detail": {
+        "title": "Guest Session"
+      },
+      "id": "ID",
+      "sessionId": "Session Id",
+      "createdAt": "Created At",
+      "lastActiveAt": "Last Active At",
+      "ipAddress": "Ip Address",
+      "userAgent": "User Agent"
+    }
+  }
+}

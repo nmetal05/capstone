@@ -1,0 +1,48 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140914"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "DocumentType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "DIPLOMA,CV,LICENSE,OTHER"
+    },
+    {
+      "fieldName": "fileName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fileContent",
+      "fieldType": "AnyBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "uploadDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "verificationStatus",
+      "fieldType": "VerificationStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PENDING,VERIFIED,REJECTED"
+    }
+  ],
+  "name": "DoctorDocument",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "doctorProfile",
+      "relationshipName": "doctor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "serviceImpl"
+}

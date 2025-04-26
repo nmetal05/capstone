@@ -83,6 +83,16 @@ public class CacheConfiguration {
             createCache(cm, com.allomed.app.domain.User.class.getName(), jcacheConfiguration);
             createCache(cm, com.allomed.app.domain.Authority.class.getName(), jcacheConfiguration);
             createCache(cm, com.allomed.app.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.AppUserProfile.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.DoctorProfile.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.DoctorProfile.class.getName() + ".specializations", jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.Specialization.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.Specialization.class.getName() + ".doctorProfiles", jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.SymptomSearch.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.SymptomSearchRecommendation.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.DoctorDocument.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.GuestSession.class.getName(), jcacheConfiguration);
+            createCache(cm, com.allomed.app.domain.DoctorViewHistory.class.getName(), jcacheConfiguration);
             // jhipster-needle-redis-add-entry
         };
     }

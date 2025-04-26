@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "symptomSearch": {
+      "home": {
+        "title": "Symptom Searches",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Symptom Search",
+        "createOrEditLabel": "Create or edit a Symptom Search",
+        "search": "Search for Symptom Search",
+        "notFound": "No Symptom Searches found"
+      },
+      "created": "A new Symptom Search is created with identifier {{ param }}",
+      "updated": "A Symptom Search is updated with identifier {{ param }}",
+      "deleted": "A Symptom Search is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Symptom Search {{ id }}?"
+      },
+      "detail": {
+        "title": "Symptom Search"
+      },
+      "id": "ID",
+      "searchDate": "Search Date",
+      "symptoms": "Symptoms",
+      "aiResponseJson": "Ai Response Json",
+      "user": "User",
+      "guestSession": "Guest Session"
+    }
+  }
+}

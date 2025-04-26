@@ -1,0 +1,78 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140910"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "officeAddress",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "latitude",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "longitude",
+      "fieldType": "Double",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "inpeCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "isVerified",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "lastLoginIp",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUserAgent",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastLoginDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "DoctorProfile",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "options": {
+        "id": true,
+        "onDelete": "CASCADE"
+      },
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "relationshipName": "internalUser",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "specialization",
+      "otherEntityRelationshipName": "doctorProfiles",
+      "relationshipName": "specializations",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "elasticsearch",
+  "service": "serviceImpl"
+}

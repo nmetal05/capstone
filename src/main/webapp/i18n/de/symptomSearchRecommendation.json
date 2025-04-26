@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "symptomSearchRecommendation": {
+      "home": {
+        "title": "Symptom Search Recommendations",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Symptom Search Recommendation erstellen",
+        "createOrEditLabel": "Symptom Search Recommendation erstellen oder bearbeiten",
+        "search": "Suche nach Symptom Search Recommendation",
+        "notFound": "Keine Symptom Search Recommendations gefunden"
+      },
+      "created": "Symptom Search Recommendation erstellt mit ID {{ param }}",
+      "updated": "Symptom Search Recommendation aktualisiert mit ID {{ param }}",
+      "deleted": "Symptom Search Recommendation gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Symptom Search Recommendation {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Symptom Search Recommendation"
+      },
+      "id": "ID",
+      "confidenceScore": "Confidence Score",
+      "rank": "Rank",
+      "reasoning": "Reasoning",
+      "search": "Search",
+      "specialization": "Specialization"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140916"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "viewDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "DoctorViewHistory",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "appUserProfile",
+      "relationshipName": "user",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "doctorProfile",
+      "relationshipName": "doctor",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "serviceImpl"
+}

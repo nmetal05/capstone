@@ -1,0 +1,27 @@
+{
+  "allomedApp": {
+    "doctorViewHistory": {
+      "home": {
+        "title": "Doctor View Histories",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Doctor View History erstellen",
+        "createOrEditLabel": "Doctor View History erstellen oder bearbeiten",
+        "search": "Suche nach Doctor View History",
+        "notFound": "Keine Doctor View Histories gefunden"
+      },
+      "created": "Doctor View History erstellt mit ID {{ param }}",
+      "updated": "Doctor View History aktualisiert mit ID {{ param }}",
+      "deleted": "Doctor View History gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Doctor View History {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Doctor View History"
+      },
+      "id": "ID",
+      "viewDate": "View Date",
+      "user": "User",
+      "doctor": "Doctor"
+    }
+  }
+}

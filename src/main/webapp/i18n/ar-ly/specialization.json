@@ -1,0 +1,27 @@
+{
+  "allomedApp": {
+    "specialization": {
+      "home": {
+        "title": "Specializations",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Specialization جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Specialization",
+        "search": "البحث عن Specialization",
+        "notFound": "لم يتم العثور على Specializations"
+      },
+      "created": "Specialization جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Specialization تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Specialization تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Specialization {{ id }}؟"
+      },
+      "detail": {
+        "title": "Specialization"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "doctorProfiles": "Doctor Profiles"
+    }
+  }
+}

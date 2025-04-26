@@ -1,0 +1,27 @@
+{
+  "allomedApp": {
+    "specialization": {
+      "home": {
+        "title": "Specializations",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Specialization",
+        "createOrEditLabel": "Créer ou éditer un Specialization",
+        "search": "Recherche pour Specialization",
+        "notFound": "Aucun Specialization trouvé"
+      },
+      "created": "Un nouveau Specialization a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Specialization avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Specialization avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Specialization {{ id }} ?"
+      },
+      "detail": {
+        "title": "Specialization"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "doctorProfiles": "Doctor Profiles"
+    }
+  }
+}

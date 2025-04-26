@@ -7,7 +7,15 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entities",
-        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
+        "appUserProfile": "App User Profile",
+        "doctorProfile": "Doctor Profile",
+        "specialization": "Specialization",
+        "symptomSearch": "Symptom Search",
+        "symptomSearchRecommendation": "Symptom Search Recommendation",
+        "doctorDocument": "Doctor Document",
+        "guestSession": "Guest Session",
+        "doctorViewHistory": "Doctor View History"
       },
       "account": {
         "main": "Account",

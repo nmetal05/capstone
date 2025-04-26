@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "symptomSearchRecommendation": {
+      "home": {
+        "title": "SymptomSearchRecommendations",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Symptom Search Recommendation",
+        "createOrEditLabel": "Créer ou éditer un Symptom Search Recommendation",
+        "search": "Recherche pour Symptom Search Recommendation",
+        "notFound": "Aucun Symptom Search Recommendation trouvé"
+      },
+      "created": "Un nouveau Symptom Search Recommendation a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Symptom Search Recommendation avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Symptom Search Recommendation avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Symptom Search Recommendation {{ id }} ?"
+      },
+      "detail": {
+        "title": "Symptom Search Recommendation"
+      },
+      "id": "ID",
+      "confidenceScore": "Confidence Score",
+      "rank": "Rank",
+      "reasoning": "Reasoning",
+      "search": "Search",
+      "specialization": "Specialization"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "doctorDocument": {
+      "home": {
+        "title": "Doctor Documents",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Doctor Document",
+        "createOrEditLabel": "Create or edit a Doctor Document",
+        "search": "Search for Doctor Document",
+        "notFound": "No Doctor Documents found"
+      },
+      "created": "A new Doctor Document is created with identifier {{ param }}",
+      "updated": "A Doctor Document is updated with identifier {{ param }}",
+      "deleted": "A Doctor Document is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Doctor Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Doctor Document"
+      },
+      "id": "ID",
+      "type": "Type",
+      "fileName": "File Name",
+      "fileContent": "File Content",
+      "uploadDate": "Upload Date",
+      "verificationStatus": "Verification Status",
+      "doctor": "Doctor"
+    }
+  }
+}

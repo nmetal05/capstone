@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "doctorDocument": {
+      "home": {
+        "title": "Doctor Documents",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Doctor Document erstellen",
+        "createOrEditLabel": "Doctor Document erstellen oder bearbeiten",
+        "search": "Suche nach Doctor Document",
+        "notFound": "Keine Doctor Documents gefunden"
+      },
+      "created": "Doctor Document erstellt mit ID {{ param }}",
+      "updated": "Doctor Document aktualisiert mit ID {{ param }}",
+      "deleted": "Doctor Document gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Doctor Document {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Doctor Document"
+      },
+      "id": "ID",
+      "type": "Type",
+      "fileName": "File Name",
+      "fileContent": "File Content",
+      "uploadDate": "Upload Date",
+      "verificationStatus": "Verification Status",
+      "doctor": "Doctor"
+    }
+  }
+}

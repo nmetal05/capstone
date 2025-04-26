@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "guestSession": {
+      "home": {
+        "title": "Guest Sessions",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Guest Session جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Guest Session",
+        "search": "البحث عن Guest Session",
+        "notFound": "لم يتم العثور على Guest Sessions"
+      },
+      "created": "Guest Session جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Guest Session تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Guest Session تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Guest Session {{ id }}؟"
+      },
+      "detail": {
+        "title": "Guest Session"
+      },
+      "id": "ID",
+      "sessionId": "Session Id",
+      "createdAt": "Created At",
+      "lastActiveAt": "Last Active At",
+      "ipAddress": "Ip Address",
+      "userAgent": "User Agent"
+    }
+  }
+}

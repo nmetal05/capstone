@@ -1,0 +1,31 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140911"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Specialization",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "doctorProfile",
+      "otherEntityRelationshipName": "specializations",
+      "relationshipName": "doctorProfiles",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

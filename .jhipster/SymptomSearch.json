@@ -1,0 +1,41 @@
+{
+  "annotations": {
+    "changelogDate": "20250426140912"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "searchDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "symptoms",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "aiResponseJson",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "SymptomSearch",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "appUserProfile",
+      "relationshipName": "user",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "guestSession",
+      "relationshipName": "guestSession",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceImpl"
+}

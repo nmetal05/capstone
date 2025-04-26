@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "guestSession": {
+      "home": {
+        "title": "GuestSessions",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Guest Session",
+        "createOrEditLabel": "Créer ou éditer un Guest Session",
+        "search": "Recherche pour Guest Session",
+        "notFound": "Aucun Guest Session trouvé"
+      },
+      "created": "Un nouveau Guest Session a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Guest Session avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Guest Session avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Guest Session {{ id }} ?"
+      },
+      "detail": {
+        "title": "Guest Session"
+      },
+      "id": "ID",
+      "sessionId": "Session Id",
+      "createdAt": "Created At",
+      "lastActiveAt": "Last Active At",
+      "ipAddress": "Ip Address",
+      "userAgent": "User Agent"
+    }
+  }
+}

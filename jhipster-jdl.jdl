@@ -1,0 +1,93 @@
+entity AppUserProfile {
+  latitude Double
+  longitude Double
+  lastLoginIp String
+  lastUserAgent String
+  lastLoginDate Instant
+}
+
+entity DoctorProfile {
+  phoneNumber String required
+  officeAddress String required
+  latitude Double required
+  longitude Double required
+  inpeCode String required unique
+  isVerified Boolean required
+  lastLoginIp String
+  lastUserAgent String
+  lastLoginDate Instant
+}
+
+entity Specialization {
+  name String required unique
+  description String
+}
+
+entity SymptomSearch {
+  searchDate Instant required
+  symptoms String required
+  aiResponseJson TextBlob required
+}
+
+entity SymptomSearchRecommendation {
+  confidenceScore Double required
+  rank Integer required
+  reasoning String required
+}
+
+entity DoctorDocument {
+  type DocumentType required
+  fileName String required
+  fileContent AnyBlob required
+  uploadDate Instant required
+  verificationStatus VerificationStatus required
+}
+
+entity GuestSession {
+  sessionId String required unique
+  createdAt Instant required
+  lastActiveAt Instant required
+  ipAddress String required
+  userAgent String required
+}
+
+entity DoctorViewHistory {
+  viewDate Instant required
+}
+
+enum DocumentType {
+  DIPLOMA, CV, LICENSE, OTHER
+}
+
+enum VerificationStatus {
+  PENDING, VERIFIED, REJECTED
+}
+
+// Relationships
+relationship OneToOne {
+  AppUserProfile{internalUser(login)} to @OnDelete("CASCADE") @Id User with builtInEntity
+  DoctorProfile{internalUser(login)}  to @OnDelete("CASCADE") @Id User with builtInEntity
+}
+
+relationship ManyToMany {
+DoctorProfile{specializations(name)} to Specialization{doctorProfiles}
+}
+
+relationship ManyToOne {
+  SymptomSearch{user} to AppUserProfile
+  SymptomSearch{guestSession} to GuestSession
+  SymptomSearchRecommendation{search required} to SymptomSearch
+  SymptomSearchRecommendation{specialization required} to Specialization
+  DoctorDocument{doctor required} to DoctorProfile
+  DoctorViewHistory{user required} to AppUserProfile
+  DoctorViewHistory{doctor required} to DoctorProfile
+}
+
+// Consistent pagination for all entities
+paginate * with pagination
+
+service all with serviceImpl
+dto * with mapstruct
+
+filter DoctorProfile, Specialization
+search DoctorProfile with elasticsearch

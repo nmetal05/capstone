@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "symptomSearch": {
+      "home": {
+        "title": "Symptom Searches",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Symptom Search erstellen",
+        "createOrEditLabel": "Symptom Search erstellen oder bearbeiten",
+        "search": "Suche nach Symptom Search",
+        "notFound": "Keine Symptom Searches gefunden"
+      },
+      "created": "Symptom Search erstellt mit ID {{ param }}",
+      "updated": "Symptom Search aktualisiert mit ID {{ param }}",
+      "deleted": "Symptom Search gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Symptom Search {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Symptom Search"
+      },
+      "id": "ID",
+      "searchDate": "Search Date",
+      "symptoms": "Symptoms",
+      "aiResponseJson": "Ai Response Json",
+      "user": "User",
+      "guestSession": "Guest Session"
+    }
+  }
+}

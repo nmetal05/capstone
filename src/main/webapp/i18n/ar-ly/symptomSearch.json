@@ -1,0 +1,29 @@
+{
+  "allomedApp": {
+    "symptomSearch": {
+      "home": {
+        "title": "Symptom Searches",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Symptom Search جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Symptom Search",
+        "search": "البحث عن Symptom Search",
+        "notFound": "لم يتم العثور على Symptom Searches"
+      },
+      "created": "Symptom Search جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Symptom Search تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Symptom Search تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Symptom Search {{ id }}؟"
+      },
+      "detail": {
+        "title": "Symptom Search"
+      },
+      "id": "ID",
+      "searchDate": "Search Date",
+      "symptoms": "Symptoms",
+      "aiResponseJson": "Ai Response Json",
+      "user": "User",
+      "guestSession": "Guest Session"
+    }
+  }
+}

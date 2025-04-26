@@ -1,0 +1,11 @@
+{
+  "allomedApp": {
+    "DocumentType": {
+      "null": "",
+      "DIPLOMA": "DIPLOMA",
+      "CV": "CV",
+      "LICENSE": "LICENSE",
+      "OTHER": "OTHER"
+    }
+  }
+}

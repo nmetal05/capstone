@@ -1,0 +1,27 @@
+{
+  "allomedApp": {
+    "doctorViewHistory": {
+      "home": {
+        "title": "Doctor View Histories",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Doctor View History جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Doctor View History",
+        "search": "البحث عن Doctor View History",
+        "notFound": "لم يتم العثور على Doctor View Histories"
+      },
+      "created": "Doctor View History جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Doctor View History تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Doctor View History تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Doctor View History {{ id }}؟"
+      },
+      "detail": {
+        "title": "Doctor View History"
+      },
+      "id": "ID",
+      "viewDate": "View Date",
+      "user": "User",
+      "doctor": "Doctor"
+    }
+  }
+}

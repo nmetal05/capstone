@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "doctorDocument": {
+      "home": {
+        "title": "DoctorDocuments",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Doctor Document",
+        "createOrEditLabel": "Créer ou éditer un Doctor Document",
+        "search": "Recherche pour Doctor Document",
+        "notFound": "Aucun Doctor Document trouvé"
+      },
+      "created": "Un nouveau Doctor Document a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Doctor Document avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Doctor Document avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Doctor Document {{ id }} ?"
+      },
+      "detail": {
+        "title": "Doctor Document"
+      },
+      "id": "ID",
+      "type": "Type",
+      "fileName": "File Name",
+      "fileContent": "File Content",
+      "uploadDate": "Upload Date",
+      "verificationStatus": "Verification Status",
+      "doctor": "Doctor"
+    }
+  }
+}

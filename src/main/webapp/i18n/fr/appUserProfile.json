@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "appUserProfile": {
+      "home": {
+        "title": "AppUserProfiles",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau App User Profile",
+        "createOrEditLabel": "Créer ou éditer un App User Profile",
+        "search": "Recherche pour App User Profile",
+        "notFound": "Aucun App User Profile trouvé"
+      },
+      "created": "Un nouveau App User Profile a été créé avec l'identifiant {{ param }}",
+      "updated": "Le App User Profile avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le App User Profile avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le App User Profile {{ id }} ?"
+      },
+      "detail": {
+        "title": "App User Profile"
+      },
+      "id": "ID",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "lastLoginIp": "Last Login Ip",
+      "lastUserAgent": "Last User Agent",
+      "lastLoginDate": "Last Login Date",
+      "internalUser": "Internal User"
+    }
+  }
+}

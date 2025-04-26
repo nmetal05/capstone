@@ -1,0 +1,10 @@
+{
+  "allomedApp": {
+    "VerificationStatus": {
+      "null": "",
+      "PENDING": "PENDING",
+      "VERIFIED": "VERIFIED",
+      "REJECTED": "REJECTED"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "allomedApp": {
+    "doctorViewHistory": {
+      "home": {
+        "title": "Doctor View Histories",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Doctor View History",
+        "createOrEditLabel": "Create or edit a Doctor View History",
+        "search": "Search for Doctor View History",
+        "notFound": "No Doctor View Histories found"
+      },
+      "created": "A new Doctor View History is created with identifier {{ param }}",
+      "updated": "A Doctor View History is updated with identifier {{ param }}",
+      "deleted": "A Doctor View History is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Doctor View History {{ id }}?"
+      },
+      "detail": {
+        "title": "Doctor View History"
+      },
+      "id": "ID",
+      "viewDate": "View Date",
+      "user": "User",
+      "doctor": "Doctor"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "allomedApp": {
+    "doctorDocument": {
+      "home": {
+        "title": "Doctor Documents",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Doctor Document جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Doctor Document",
+        "search": "البحث عن Doctor Document",
+        "notFound": "لم يتم العثور على Doctor Documents"
+      },
+      "created": "Doctor Document جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Doctor Document تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Doctor Document تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Doctor Document {{ id }}؟"
+      },
+      "detail": {
+        "title": "Doctor Document"
+      },
+      "id": "ID",
+      "type": "Type",
+      "fileName": "File Name",
+      "fileContent": "File Content",
+      "uploadDate": "Upload Date",
+      "verificationStatus": "Verification Status",
+      "doctor": "Doctor"
+    }
+  }
+}

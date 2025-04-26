@@ -1,0 +1,35 @@
+{
+  "allomedApp": {
+    "doctorProfile": {
+      "home": {
+        "title": "Doctor Profiles",
+        "refreshListLabel": "تحديث القائمة",
+        "createLabel": "إنشاء Doctor Profile جديد",
+        "createOrEditLabel": "إنشاء أو تعديل Doctor Profile",
+        "search": "البحث عن Doctor Profile",
+        "notFound": "لم يتم العثور على Doctor Profiles"
+      },
+      "created": "Doctor Profile جديد تم إنشاؤه بالمعرف {{ param }}",
+      "updated": "Doctor Profile تم تحديثه بالمعرف {{ param }}",
+      "deleted": "Doctor Profile تم حذفه بالمعرف {{ param }}",
+      "delete": {
+        "question": "هل أنت متأكد أنك تريد حذف Doctor Profile {{ id }}؟"
+      },
+      "detail": {
+        "title": "Doctor Profile"
+      },
+      "id": "ID",
+      "phoneNumber": "Phone Number",
+      "officeAddress": "Office Address",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "inpeCode": "Inpe Code",
+      "isVerified": "Is Verified",
+      "lastLoginIp": "Last Login Ip",
+      "lastUserAgent": "Last User Agent",
+      "lastLoginDate": "Last Login Date",
+      "internalUser": "Internal User",
+      "specializations": "Specializations"
+    }
+  }
+}

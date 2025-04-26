@@ -1,0 +1,35 @@
+{
+  "allomedApp": {
+    "doctorProfile": {
+      "home": {
+        "title": "Doctor Profiles",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Doctor Profile",
+        "createOrEditLabel": "Create or edit a Doctor Profile",
+        "search": "Search for Doctor Profile",
+        "notFound": "No Doctor Profiles found"
+      },
+      "created": "A new Doctor Profile is created with identifier {{ param }}",
+      "updated": "A Doctor Profile is updated with identifier {{ param }}",
+      "deleted": "A Doctor Profile is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Doctor Profile {{ id }}?"
+      },
+      "detail": {
+        "title": "Doctor Profile"
+      },
+      "id": "ID",
+      "phoneNumber": "Phone Number",
+      "officeAddress": "Office Address",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "inpeCode": "Inpe Code",
+      "isVerified": "Is Verified",
+      "lastLoginIp": "Last Login Ip",
+      "lastUserAgent": "Last User Agent",
+      "lastLoginDate": "Last Login Date",
+      "internalUser": "Internal User",
+      "specializations": "Specializations"
+    }
+  }
+}
