@@ -100,3 +100,10 @@ jhipster:
 # ===================================================================
 
 # application:
+keycloak:
+  auth-server-url: http://localhost:9080/ # Or your correct Keycloak URL
+  realm: jhipster # Or the realm your app uses
+keycloak-admin:
+  username: admin # A Keycloak user with admin rights
+  password: admin # The password for that user
+  client-id: admin-cli # Or the client ID for your admin client

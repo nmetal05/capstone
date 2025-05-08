@@ -39,4 +39,8 @@ public interface AppUserProfileRepository extends JpaRepository<AppUserProfile, 
         "select appUserProfile from AppUserProfile appUserProfile left join fetch appUserProfile.internalUser where appUserProfile.id =:id"
     )
     Optional<AppUserProfile> findOneWithToOneRelationships(@Param("id") String id);
+
+    Optional<AppUserProfile> findOneByInternalUser_Id(String userId);
+
+    boolean existsByInternalUser_Id(String userId);
 }

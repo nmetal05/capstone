@@ -1,9 +1,9 @@
 import React from 'react';
 import { Navigate, PathRouteProps, useLocation } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
-
 import { useAppSelector } from 'app/config/store';
 import ErrorBoundary from 'app/shared/error/error-boundary';
+import { AUTHORITIES } from 'app/config/constants';
 
 interface IOwnProps extends PathRouteProps {
   hasAnyAuthorities?: string[];
@@ -11,60 +11,40 @@ interface IOwnProps extends PathRouteProps {
 }
 
 export const PrivateRoute = ({ children, hasAnyAuthorities = [], ...rest }: IOwnProps) => {
-  const isAuthenticated = useAppSelector(state => state.authentication.isAuthenticated);
-  const sessionHasBeenFetched = useAppSelector(state => state.authentication.sessionHasBeenFetched);
-  const account = useAppSelector(state => state.authentication.account);
-  const isAuthorized = hasAnyAuthority(account.authorities, hasAnyAuthorities);
-  const pageLocation = useLocation();
+  const { isAuthenticated, sessionHasBeenFetched, account, roleSelectionCompleted } = useAppSelector(state => state.authentication);
 
-  if (!children) {
-    throw new Error(`A component needs to be specified for private route for path ${(rest as any).path}`);
-  }
+  const { hasDoctorProfile, doctorProfileComplete } = useAppSelector(state => state.profile);
 
-  if (!sessionHasBeenFetched) {
-    return <div></div>;
+  const location = useLocation();
+  if (!children) throw new Error(`A component needs to be specified for private route for path ${(rest as any).path}`);
+  if (!sessionHasBeenFetched) return <div />;
+
+  const isAdmin = account.authorities?.includes(AUTHORITIES.ADMIN);
+
+  /* ----- new logic: profile flags alone are enough ----- */
+  const onboardingFinished = roleSelectionCompleted || hasDoctorProfile || doctorProfileComplete;
+
+  const needsRoleSelection =
+    isAuthenticated &&
+    !isAdmin &&
+    !onboardingFinished &&
+    location.pathname !== '/choose-profile' &&
+    location.pathname !== '/complete-doctor-profile';
+
+  const from = location.state?.from || { pathname: '/' };
+
+  if (needsRoleSelection) {
+    return <Navigate to="/choose-profile" state={{ from }} replace />;
   }
 
   if (isAuthenticated) {
-    if (isAuthorized) {
-      return <ErrorBoundary>{children}</ErrorBoundary>;
-    }
+    if (isAdmin) return <ErrorBoundary>{children}</ErrorBoundary>;
 
-    return (
-      <div className="insufficient-authority">
-        <div className="alert alert-danger">
-          <Translate contentKey="error.http.403">You are not authorized to access this page.</Translate>
-        </div>
-      </div>
-    );
+    /* when onboarding is finished every non-admin may enter */
+    return <ErrorBoundary>{children}</ErrorBoundary>;
   }
 
-  return (
-    <Navigate
-      to={{
-        pathname: '/sign-in',
-        search: pageLocation.search,
-      }}
-      replace
-      state={{ from: pageLocation }}
-    />
-  );
+  return <Navigate to={{ pathname: '/sign-in', search: location.search }} replace state={{ from: location }} />;
 };
 
-export const hasAnyAuthority = (authorities: string[], hasAnyAuthorities: string[]) => {
-  if (authorities && authorities.length !== 0) {
-    if (hasAnyAuthorities.length === 0) {
-      return true;
-    }
-    return hasAnyAuthorities.some(auth => authorities.includes(auth));
-  }
-  return false;
-};
-
-/**
- * Checks authentication before showing the children and redirects to the
- * login page if the user is not authenticated.
- * If hasAnyAuthorities is provided the authorization status is also
- * checked and an error message is shown if the user is not authorized.
- */
 export default PrivateRoute;

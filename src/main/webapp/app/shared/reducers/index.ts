@@ -1,5 +1,6 @@
 import { ReducersMapObject } from '@reduxjs/toolkit';
 import { loadingBarReducer as loadingBar } from 'react-redux-loading-bar';
+import profile from './profile';
 
 import administration from 'app/modules/administration/administration.reducer';
 import entitiesReducers from 'app/entities/reducers';
@@ -17,6 +18,7 @@ const rootReducer: ReducersMapObject = {
   administration,
   userManagement,
   loadingBar,
+  profile,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   ...entitiesReducers,
 };

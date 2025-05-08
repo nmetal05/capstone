@@ -41,4 +41,7 @@ public interface DoctorProfileRepository
 
     @Query("select doctorProfile from DoctorProfile doctorProfile left join fetch doctorProfile.internalUser where doctorProfile.id =:id")
     Optional<DoctorProfile> findOneWithToOneRelationships(@Param("id") String id);
+
+    Optional<DoctorProfile> findOneByInternalUser_Id(String userId);
+    boolean existsByInternalUser_Id(String userId);
 }

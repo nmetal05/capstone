@@ -9,7 +9,7 @@ import authentication, {
   getAccount,
   initialState,
   logoutServer,
-} from 'app/shared/reducers/authentication';
+} from '../../shared/reducers/authentication';
 
 describe('Authentication reducer tests', () => {
   function isAccountEmpty(state): boolean {

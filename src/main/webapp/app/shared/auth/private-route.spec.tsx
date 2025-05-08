@@ -5,7 +5,7 @@ import { TranslatorContext } from 'react-jhipster';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 
-import { AUTHORITIES } from 'app/config/constants';
+import { AUTHORITIES } from '../../config/constants';
 import PrivateRoute, { hasAnyAuthority } from './private-route';
 
 const TestComp = () => <div>Test</div>;

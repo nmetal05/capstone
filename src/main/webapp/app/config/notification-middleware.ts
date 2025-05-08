@@ -79,7 +79,6 @@ export default () => next => action => {
         }
       }
     } else if (error.config?.url?.endsWith('api/account') && error.config?.method === 'get') {
-      /* eslint-disable no-console */
       console.log('Authentication Error: Trying to access url api/account with GET.');
     } else {
       addErrorAlert({ message: error.message ?? 'Unknown error!' });

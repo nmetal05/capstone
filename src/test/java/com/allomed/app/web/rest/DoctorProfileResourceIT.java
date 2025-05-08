@@ -264,7 +264,7 @@ class DoctorProfileResourceIT {
         em.detach(updatedDoctorProfile);
 
         // Update the User with new association value
-        updatedDoctorProfile.setUser(user);
+        updatedDoctorProfile.setInternalUser(user);
         DoctorProfileDTO updatedDoctorProfileDTO = doctorProfileMapper.toDto(updatedDoctorProfile);
         assertThat(updatedDoctorProfileDTO).isNotNull();
 

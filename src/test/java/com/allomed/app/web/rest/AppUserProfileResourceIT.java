@@ -241,7 +241,7 @@ class AppUserProfileResourceIT {
         em.detach(updatedAppUserProfile);
 
         // Update the User with new association value
-        updatedAppUserProfile.setUser(user);
+        updatedAppUserProfile.setInternalUser(user);
         AppUserProfileDTO updatedAppUserProfileDTO = appUserProfileMapper.toDto(updatedAppUserProfile);
         assertThat(updatedAppUserProfileDTO).isNotNull();
 
