@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "doctor_suggestions_response",
+  "type": "object",
+  "properties": {
+    "suggestions": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "specialization": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "reason": { "type": "string", "minLength": 30, "maxLength": 250 }
+        },
+        "required": ["specialization", "confidence", "reason"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["suggestions"],
+  "additionalProperties": false
+}

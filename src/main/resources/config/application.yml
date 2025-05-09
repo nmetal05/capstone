@@ -236,3 +236,7 @@ jhipster:
 # ===================================================================
 
 # application:
+application:
+  ai:
+    url: http://127.0.0.1:4040/v1/chat/completions # LM Studio endpoint
+    max-suggestions: 5 # you can change this anytime

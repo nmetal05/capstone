@@ -107,3 +107,8 @@ keycloak-admin:
   username: admin # A Keycloak user with admin rights
   password: admin # The password for that user
   client-id: admin-cli # Or the client ID for your admin client
+
+application:
+  ai:
+    url: http://127.0.0.1:4040/v1/chat/completions # LM Studio endpoint
+    max-suggestions: 5 # you can change this anytime
