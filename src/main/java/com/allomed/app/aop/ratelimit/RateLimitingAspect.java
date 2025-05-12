@@ -30,11 +30,13 @@ import org.slf4j.LoggerFactory;
 // Spring imports
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken; // Ensure this is imported
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser; // <<< Ensure this is imported
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken; // Ensure this is imported
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -68,7 +70,36 @@ public class RateLimitingAspect {
     public Object rateLimitEndpoint(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
+
+        // --- DETAILED AUTHENTICATION LOGGING --- // (Kept for debugging if needed)
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("--- RateLimitingAspect Start ---");
+        log.info("Method: {}", method.getName());
+        if (authentication != null) {
+            log.info("Authentication object PRESENT.");
+            log.info("Authentication TYPE: {}", authentication.getClass().getName());
+            log.info("Is Authenticated?: {}", authentication.isAuthenticated());
+            log.info("Authorities: {}", authentication.getAuthorities());
+            if (authentication.getPrincipal() != null) {
+                log.info("Principal TYPE: {}", authentication.getPrincipal().getClass().getName());
+            } else {
+                log.info("Principal is NULL.");
+            }
+            if (authentication instanceof JwtAuthenticationToken) {
+                log.info("Object IS instanceof JwtAuthenticationToken.");
+            } else {
+                log.info("Object IS NOT instanceof JwtAuthenticationToken.");
+            }
+            if (authentication instanceof AnonymousAuthenticationToken) {
+                log.info("Object IS instanceof AnonymousAuthenticationToken.");
+            }
+        } else {
+            log.info("Authentication object is NULL.");
+        }
+        log.info("--- RateLimitingAspect Auth Check End ---");
+        // --- END OF DETAILED LOGGING --- //
+
+        // --- Corrected Logic ---
         Set<String> roles = getRoles(authentication);
 
         // 1. Bypass for ADMIN
@@ -84,14 +115,20 @@ public class RateLimitingAspect {
 
         if (roles.contains(AuthoritiesConstants.APP_USER) || roles.contains(AuthoritiesConstants.USER)) {
             // --- APP_USER / USER ---
+            // Call the UPDATED getUserIdFromJwt method
             Optional<String> userIdOpt = getUserIdFromJwt(authentication);
             if (userIdOpt.isEmpty()) {
-                log.error("Cannot extract User ID (JWT 'sub') for authenticated user. Denying {}", method.getName());
+                // This should NOT happen now if logged in via Keycloak or Bearer token
+                log.error(
+                    "Could not extract User ID ('sub') for authenticated user even after update. AuthType: {}. Denying {}",
+                    (authentication != null ? authentication.getClass().getName() : "null"),
+                    method.getName()
+                );
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User ID missing for rate limit.");
             }
             identifier = userIdOpt.get();
             bandwidth = Bandwidth.classic(APP_USER_LIMIT_PER_DAY, Refill.intervally(APP_USER_LIMIT_PER_DAY, LIMIT_DURATION));
-            contextLog = "APP_USER(ID:" + identifier.substring(0, Math.min(identifier.length(), 8)) + "...)"; // Log partial ID
+            contextLog = "APP_USER(ID:" + identifier.substring(0, Math.min(identifier.length(), 8)) + "...)";
         } else if (roles.contains(AuthoritiesConstants.ANONYMOUS) || !SecurityUtils.isAuthenticated(authentication)) {
             // --- GUEST ---
             identifier = getClientIpAddress();
@@ -102,7 +139,7 @@ public class RateLimitingAspect {
             bandwidth = Bandwidth.classic(GUEST_LIMIT_PER_DAY, Refill.intervally(GUEST_LIMIT_PER_DAY, LIMIT_DURATION));
             contextLog = "GUEST(IP:" + identifier + ")";
         } else {
-            // --- UNHANDLED / FORBIDDEN --- (e.g., DOCTOR blocked by @PreAuthorize ideally)
+            // --- UNHANDLED / FORBIDDEN --- (e.g., DOCTOR caught here)
             log.warn("Unhandled roles {} for rate limiting {}. Denying.", roles, method.getName());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied or rate limit not configured.");
         }
@@ -113,23 +150,20 @@ public class RateLimitingAspect {
 
         // 4. Configure Bucket4j Bucket
         BucketConfiguration configuration = BucketConfiguration.builder().addLimit(bandwidth).build();
-        Supplier<BucketConfiguration> configSupplier = () -> configuration; // Supplier to create config if needed
-        Bucket bucket = proxyManager.builder().build(redisKey, configSupplier); // Get or create bucket in Redis
+        Supplier<BucketConfiguration> configSupplier = () -> configuration;
+        Bucket bucket = proxyManager.builder().build(redisKey, configSupplier);
 
-        // 5. Attempt to consume a token (atomic operation via Bucket4j/Redis)
+        // 5. Attempt to consume a token
         ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
         // 6. Check result and proceed or reject
         if (probe.isConsumed()) {
-            // Limit not exceeded
             log.trace("Rate limit check passed for key {}. Remaining: {}", redisKey, probe.getRemainingTokens());
-            // Optional: Add rate limit headers to response here if desired
-            return joinPoint.proceed(); // Execute the original controller method
+            return joinPoint.proceed();
         } else {
-            // Limit exceeded
             long millisToWaitForRefill = TimeUnit.NANOSECONDS.toMillis(probe.getNanosToWaitForRefill());
             log.warn("Rate limit EXCEEDED for {} on key {}. Wait {} ms.", contextLog, redisKey, millisToWaitForRefill);
-            addRetryAfterHeaderToResponse(millisToWaitForRefill); // Add standard HTTP header
+            addRetryAfterHeaderToResponse(millisToWaitForRefill);
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded. Please try again later.");
         }
     }
@@ -141,21 +175,63 @@ public class RateLimitingAspect {
     }
 
     private Set<String> getRoles(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             return Set.of(AuthoritiesConstants.ANONYMOUS);
         }
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 
+    // --- UPDATED Method to handle both JWT and OIDC User ---
     private Optional<String> getUserIdFromJwt(Authentication authentication) {
-        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
-            Jwt jwt = jwtAuth.getToken();
-            String userId = jwt.getSubject(); // 'sub' claim from JWT
-            return (userId != null && !userId.isBlank()) ? Optional.of(userId) : Optional.empty();
+        if (authentication == null) {
+            log.warn("getUserIdFromAuthentication called with NULL authentication object.");
+            return Optional.empty();
         }
-        log.trace("Authentication is not JwtAuthenticationToken, cannot get 'sub' claim.");
-        return Optional.empty();
+
+        String userId = null;
+
+        // Case 1: JWT Authentication (Bearer Token)
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            log.trace("Authentication is JwtAuthenticationToken.");
+            Jwt jwt = jwtAuth.getToken();
+            if (jwt == null) {
+                log.warn("JwtAuthenticationToken contains a NULL JWT token.");
+                return Optional.empty();
+            }
+            userId = jwt.getSubject(); // 'sub' claim from JWT
+            log.trace("Extracted 'sub' claim via JwtAuthenticationToken: {}", userId);
+        }
+        // Case 2: OAuth2 Login Authentication (OIDC User principal)
+        else if (authentication.getPrincipal() instanceof OidcUser oidcUser) {
+            // Check the Authentication type as well for clarity, though checking Principal is key
+            log.trace(
+                "Authentication principal is OidcUser (likely from OAuth2AuthenticationToken). Type: {}",
+                authentication.getClass().getName()
+            );
+            userId = oidcUser.getSubject(); // 'sub' claim from OidcUser
+            log.trace("Extracted 'sub' claim via OidcUser principal: {}", userId);
+        }
+
+        // If neither case matched or extraction failed, log a warning
+        if (userId == null) {
+            log.warn(
+                "getUserIdFromAuthentication: Could not extract 'sub' claim. Authentication type: {}, Principal type: {}",
+                authentication.getClass().getName(),
+                (authentication.getPrincipal() != null ? authentication.getPrincipal().getClass().getName() : "null")
+            );
+            return Optional.empty();
+        }
+
+        // Check if extracted ID is valid
+        if (userId.isBlank()) {
+            log.warn("Extracted 'sub' claim is null or blank.");
+            return Optional.empty();
+        }
+
+        return Optional.of(userId);
     }
+
+    // --- End of UPDATED Method ---
 
     private String getClientIpAddress() {
         ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -164,7 +240,6 @@ public class RateLimitingAspect {
             return null;
         }
         HttpServletRequest request = sra.getRequest();
-        // Check standard proxy headers first
         String forwardedFor = request.getHeader("X-Forwarded-For");
         if (forwardedFor != null && !forwardedFor.isBlank()) {
             return forwardedFor.split(",")[0].trim();
@@ -173,14 +248,13 @@ public class RateLimitingAspect {
         if (realIp != null && !realIp.isBlank()) {
             return realIp.trim();
         }
-        // Fallback to direct connection address
         return request.getRemoteAddr();
     }
 
     private void addRetryAfterHeaderToResponse(long millisToWait) {
         ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (sra != null && sra.getResponse() != null) {
-            long secondsToWait = Math.max(1, TimeUnit.MILLISECONDS.toSeconds(millisToWait)); // Ensure at least 1 second
+            long secondsToWait = Math.max(1, TimeUnit.MILLISECONDS.toSeconds(millisToWait));
             sra.getResponse().addHeader("Retry-After", String.valueOf(secondsToWait));
             log.trace("Adding Retry-After header: {}", secondsToWait);
         } else {
@@ -188,7 +262,7 @@ public class RateLimitingAspect {
         }
     }
 
-    // Static inner class to check authentication status reliably
+    // Static inner class (keep as is)
     private static class SecurityUtils {
 
         static boolean isAuthenticated(Authentication authentication) {

@@ -5,6 +5,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.oauth2.core.oidc.StandardClaimNames.PREFERRED_USERNAME;
 
 import com.allomed.app.security.*;
+// Make sure AuthoritiesConstants is imported if not already implicitly
+import com.allomed.app.security.AuthoritiesConstants;
 import com.allomed.app.security.SecurityUtils;
 import com.allomed.app.security.oauth2.AudienceValidator;
 import com.allomed.app.security.oauth2.CustomClaimConverter;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+// import org.springframework.core.annotation.Order; // No longer needed for this bean
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -43,13 +45,13 @@ import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher; // Keep this
-import org.springframework.security.web.util.matcher.OrRequestMatcher; // Keep this
+// import org.springframework.security.web.util.matcher.OrRequestMatcher; // No longer needed here
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import tech.jhipster.config.JHipsterProperties;
 
 @Configuration
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true) // keep method security enabled for @PreAuthorize etc.
 public class SecurityConfiguration {
 
     private final JHipsterProperties jHipsterProperties;
@@ -62,45 +64,26 @@ public class SecurityConfiguration {
         this.jHipsterProperties = jHipsterProperties;
     }
 
-    // --- SecurityFilterChain for specific PUBLIC API endpoints ---
-    @Bean
-    @Order(1) // <<< Runs first
-    public SecurityFilterChain publicApiFilterChain(HttpSecurity http) throws Exception { // Renamed for clarity
-        http
-            // This chain ONLY handles the AI endpoint now
-            .securityMatcher(
-                new OrRequestMatcher(
-                    AntPathRequestMatcher.antMatcher("/api/ai/symptom-to-spec")
-                    // Removed /api/auth-info from here
-                )
-            )
-            // For matched paths, permit all access without authentication
-            .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
-            // Disable CSRF for this specific public path
-            .csrf(AbstractHttpConfigurer::disable)
-            // Apply CORS if needed for public access
-            .cors(withDefaults());
-        // IMPORTANT: No .oauth2ResourceServer() or .oauth2Login() configured here
-        return http.build();
-    }
+    // --- REMOVED the separate publicApiFilterChain ---
 
-    // --- End of publicApiFilterChain ---
-
-    // --- Main SecurityFilterChain for SECURED endpoints AND specific permitted ones ---
+    // --- Main SecurityFilterChain for ALL endpoints ---
     @Bean
-    @Order(2) // <<< Runs second, handles everything NOT matched by publicApiFilterChain
     public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http
             .cors(withDefaults())
-            // Apply CSRF only to this secured chain (will run for /api/auth-info)
+            // --- Disable CSRF for stateless API endpoints ---
             .csrf(csrf ->
                 csrf
+                    .ignoringRequestMatchers(
+                        AntPathRequestMatcher.antMatcher("/api/**"),
+                        AntPathRequestMatcher.antMatcher("/management/**")
+                    )
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
             )
-            .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class) // Keep SPA filter
+            .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
             .headers(headers ->
-                headers // Keep your existing headers configuration
+                headers
                     .contentSecurityPolicy(csp -> csp.policyDirectives(jHipsterProperties.getSecurity().getContentSecurityPolicy()))
                     .frameOptions(FrameOptionsConfig::sameOrigin)
                     .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
@@ -110,24 +93,33 @@ public class SecurityConfiguration {
                         )
                     )
             )
+            // --- Apply OAuth2 Resource Server JWT validation FIRST ---
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter())))
+            // --- Then define authorization rules ---
             .authorizeHttpRequests(authz ->
                 // prettier-ignore
                 authz
-                    // --- Define rules only for paths handled by THIS chain ---
-                    // Static resources for SPA
+                    // --- Static resources / SPA ---
                     .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
                     .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"), mvc.pattern("/*.webapp")).permitAll()
                     .requestMatchers(mvc.pattern("/app/**")).permitAll()
                     .requestMatchers(mvc.pattern("/i18n/**")).permitAll()
                     .requestMatchers(mvc.pattern("/content/**")).permitAll()
                     .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
-                    // --- API Rules ---
+                    // --- Authentication/Public API endpoints ---
                     .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
-                    // <<< Add /api/auth-info back here with permitAll >>>
                     .requestMatchers(mvc.pattern("/api/auth-info")).permitAll()
-                    // /api/ai/symptom-to-spec is handled by publicApiFilterChain
+
+                    // --- AI Endpoint Rule ---
+                    // Allow all access here. Anonymous users are permitted.
+                    // Authenticated users (Admin, App User) are permitted.
+                    // DOCTOR role will be blocked by the RateLimitingAspect's FORBIDDEN check later.
+                    .requestMatchers(mvc.pattern("/api/ai/symptom-to-spec")).permitAll() // <<< Corrected: Only permitAll here
+
+                    // --- Other API Rules ---
                     .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/api/**")).authenticated() // <<< Default for other /api paths
+                    .requestMatchers(mvc.pattern("/api/**")).authenticated() // Default for others
+
                     // --- Management Rules ---
                     .requestMatchers(mvc.pattern("/v3/api-docs/**")).hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers(mvc.pattern("/management/health")).permitAll()
@@ -136,9 +128,8 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/management/prometheus")).permitAll()
                     .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
             )
-            // --- Apply OAuth2 Login/Resource Server ONLY to this secured chain ---
+            // Keep OIDC login flow if used for browser-based login
             .oauth2Login(oauth2 -> oauth2.loginPage("/").userInfoEndpoint(userInfo -> userInfo.oidcUserService(this.oidcUserService())))
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter())))
             .oauth2Client(withDefaults());
         return http.build();
     }
@@ -200,6 +191,7 @@ public class SecurityConfiguration {
         return jwtDecoder;
     }
 
+    // Keep SpaCsrfTokenRequestHandler if CSRF is still needed for some parts
     static final class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
 
         private final CsrfTokenRequestHandler plain = new CsrfTokenRequestAttributeHandler();

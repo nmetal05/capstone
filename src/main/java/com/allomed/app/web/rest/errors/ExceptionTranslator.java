@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// Import Logger explicitly if needed, though usually inherited logger is sufficient
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.ConcurrencyFailureException;
@@ -24,6 +25,7 @@ import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException; // Ensure imported
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,10 +40,6 @@ import tech.jhipster.web.rest.errors.ProblemDetailWithCause;
 import tech.jhipster.web.rest.errors.ProblemDetailWithCause.ProblemDetailWithCauseBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 
-/**
- * Controller advice to translate the server side exceptions to client-friendly json structures.
- * The error response follows RFC7807 - Problem Details for HTTP APIs (https://tools.ietf.org/html/rfc7807).
- */
 @ControllerAdvice
 public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
@@ -50,7 +48,8 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     private static final String PATH_KEY = "path";
     private static final boolean CASUAL_CHAIN_ENABLED = false;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExceptionTranslator.class);
+    // Use the logger defined by ResponseEntityExceptionHandler or declare one if needed
+    // private static final Logger LOG = LoggerFactory.getLogger(ExceptionTranslator.class); // Already inherited
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -58,14 +57,18 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     private final Environment env;
 
     public ExceptionTranslator(Environment env) {
+        super();
         this.env = env;
     }
 
+    // Keep handleAnyException and other generic handlers
     @ExceptionHandler
     public ResponseEntity<Object> handleAnyException(Throwable ex, NativeWebRequest request) {
-        LOG.debug("Converting Exception to Problem Details:", ex);
+        // Only log unexpected exceptions here if desired, or let specific handlers control logging
+        // logger.error("Unhandled exception caught:", ex); // Example of logging only truly unhandled ones
         ProblemDetailWithCause pdCause = wrapAndCustomizeProblem(ex, request);
-        return handleExceptionInternal((Exception) ex, pdCause, buildHeaders(ex), HttpStatusCode.valueOf(pdCause.getStatus()), request);
+        HttpHeaders headers = Optional.ofNullable(buildHeaders(ex)).orElse(new HttpHeaders());
+        return handleExceptionInternal((Exception) ex, pdCause, headers, HttpStatusCode.valueOf(pdCause.getStatus()), request);
     }
 
     @Nullable
@@ -78,52 +81,42 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
         WebRequest request
     ) {
         body = body == null ? wrapAndCustomizeProblem((Throwable) ex, (NativeWebRequest) request) : body;
+        headers = Optional.ofNullable(headers).orElse(new HttpHeaders());
+        // The base class might do its own logging here (often WARN level)
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
+
+    // Keep all the helper methods (wrapAndCustomizeProblem, getProblemDetailWithCause, customizeProblem, etc.)
+    // including the modifications made previously for AuthorizationDeniedException in:
+    // getMappedStatus, getMappedMessageKey, getCustomizedTitle, getCustomizedErrorDetails
 
     protected ProblemDetailWithCause wrapAndCustomizeProblem(Throwable ex, NativeWebRequest request) {
         return customizeProblem(getProblemDetailWithCause(ex), ex, request);
     }
 
     private ProblemDetailWithCause getProblemDetailWithCause(Throwable ex) {
-        if (
-            ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause problemDetailWithCause
-        ) return problemDetailWithCause;
+        if (ex instanceof ErrorResponseException exp && exp.getBody() instanceof ProblemDetailWithCause pdwc) return pdwc;
         return ProblemDetailWithCauseBuilder.instance().withStatus(toStatus(ex).value()).build();
     }
 
     protected ProblemDetailWithCause customizeProblem(ProblemDetailWithCause problem, Throwable err, NativeWebRequest request) {
         if (problem.getStatus() <= 0) problem.setStatus(toStatus(err));
-
         if (problem.getType() == null || problem.getType().equals(URI.create("about:blank"))) problem.setType(getMappedType(err));
-
-        // higher precedence to Custom/ResponseStatus types
         String title = extractTitle(err, problem.getStatus());
         String problemTitle = problem.getTitle();
-        if (problemTitle == null || !problemTitle.equals(title)) {
-            problem.setTitle(title);
-        }
-
-        if (problem.getDetail() == null) {
-            // higher precedence to cause
-            problem.setDetail(getCustomizedErrorDetails(err));
-        }
-
+        if (problemTitle == null || !problemTitle.equals(title)) problem.setTitle(title);
+        if (problem.getDetail() == null) problem.setDetail(getCustomizedErrorDetails(err));
         Map<String, Object> problemProperties = problem.getProperties();
         if (problemProperties == null || !problemProperties.containsKey(MESSAGE_KEY)) problem.setProperty(
             MESSAGE_KEY,
             getMappedMessageKey(err) != null ? getMappedMessageKey(err) : "error.http." + problem.getStatus()
         );
-
         if (problemProperties == null || !problemProperties.containsKey(PATH_KEY)) problem.setProperty(PATH_KEY, getPathValue(request));
-
         if (
             (err instanceof MethodArgumentNotValidException fieldException) &&
             (problemProperties == null || !problemProperties.containsKey(FIELD_ERRORS_KEY))
         ) problem.setProperty(FIELD_ERRORS_KEY, getFieldErrors(fieldException));
-
         problem.setCause(buildCause(err.getCause(), request).orElse(null));
-
         return problem;
     }
 
@@ -157,9 +150,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private HttpStatus toStatus(final Throwable throwable) {
-        // Let the ErrorResponse take this responsibility
         if (throwable instanceof ErrorResponse err) return HttpStatus.valueOf(err.getBody().getStatus());
-
         return Optional.ofNullable(getMappedStatus(throwable)).orElse(
             Optional.ofNullable(resolveResponseStatus(throwable)).map(ResponseStatus::value).orElse(HttpStatus.INTERNAL_SERVER_ERROR)
         );
@@ -180,16 +171,17 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private String getMappedMessageKey(Throwable err) {
-        if (err instanceof MethodArgumentNotValidException) {
-            return ErrorConstants.ERR_VALIDATION;
-        } else if (err instanceof ConcurrencyFailureException || err.getCause() instanceof ConcurrencyFailureException) {
-            return ErrorConstants.ERR_CONCURRENCY_FAILURE;
-        }
+        if (err instanceof MethodArgumentNotValidException) return ErrorConstants.ERR_VALIDATION;
+        if (
+            err instanceof ConcurrencyFailureException || err.getCause() instanceof ConcurrencyFailureException
+        ) return ErrorConstants.ERR_CONCURRENCY_FAILURE;
+        if (err instanceof AuthorizationDeniedException || err instanceof AccessDeniedException) return "error.http.403";
         return null;
     }
 
     private String getCustomizedTitle(Throwable err) {
         if (err instanceof MethodArgumentNotValidException) return "Method argument not valid";
+        if (err instanceof AuthorizationDeniedException || err instanceof AccessDeniedException) return "Access Denied";
         return null;
     }
 
@@ -200,14 +192,17 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
             if (err instanceof DataAccessException) return "Failure during data access";
             if (containsPackageName(err.getMessage())) return "Unexpected runtime exception";
         }
+        if (
+            err instanceof AuthorizationDeniedException || err instanceof AccessDeniedException
+        ) return "You do not have the required permissions to perform this action.";
         return err.getCause() != null ? err.getCause().getMessage() : err.getMessage();
     }
 
     private HttpStatus getMappedStatus(Throwable err) {
-        // Where we disagree with Spring defaults
-        if (err instanceof AccessDeniedException) return HttpStatus.FORBIDDEN;
+        if (err instanceof AccessDeniedException || err instanceof AuthorizationDeniedException) return HttpStatus.FORBIDDEN;
         if (err instanceof ConcurrencyFailureException) return HttpStatus.CONFLICT;
         if (err instanceof BadCredentialsException) return HttpStatus.UNAUTHORIZED;
+        if (err instanceof MethodArgumentNotValidException) return HttpStatus.BAD_REQUEST;
         return null;
     }
 
@@ -230,18 +225,40 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
     public Optional<ProblemDetailWithCause> buildCause(final Throwable throwable, NativeWebRequest request) {
         if (throwable != null && isCasualChainEnabled()) {
-            return Optional.of(customizeProblem(getProblemDetailWithCause(throwable), throwable, request));
+            ProblemDetailWithCause causeProblem = getProblemDetailWithCause(throwable);
+            return Optional.of(customizeProblem(causeProblem, throwable, request));
         }
         return Optional.ofNullable(null);
     }
 
     private boolean isCasualChainEnabled() {
-        // Customize as per the needs
         return CASUAL_CHAIN_ENABLED;
     }
 
     private boolean containsPackageName(String message) {
-        // This list is for sure not complete
         return StringUtils.containsAny(message, "org.", "java.", "net.", "jakarta.", "javax.", "com.", "io.", "de.", "com.allomed.app");
     }
+
+    // --- Specific Exception Handler for AuthorizationDeniedException ---
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Object> handleAuthorizationDeniedException(AuthorizationDeniedException ex, NativeWebRequest request) {
+        // Construct the full message first
+        String logMessage = String.format("Authorization Denied for request [%s]: %s", extractURI(request), ex.getMessage());
+        // Log the pre-formatted string using the single-argument warn method
+        logger.warn(logMessage); // Use the inherited logger with a single String argument
+
+        // Build the standard ProblemDetail using the existing helper methods
+        ProblemDetailWithCause problem = ProblemDetailWithCauseBuilder.instance()
+            .withStatus(HttpStatus.FORBIDDEN.value()) // 403
+            .withTitle("Access Denied") // Consistent title
+            .withDetail("You do not have the required permissions to perform this action.") // Consistent detail
+            .withProperty(MESSAGE_KEY, "error.http.403") // Standard message key
+            .withProperty(PATH_KEY, getPathValue(request)) // Consistent path
+            .build();
+
+        // Use the overridden handleExceptionInternal to build the final ResponseEntity
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+    // --- End of Specific Handler ---
+
 }
