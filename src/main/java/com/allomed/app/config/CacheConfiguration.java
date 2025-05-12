@@ -7,6 +7,8 @@ import javax.cache.expiry.CreatedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.redisson.Redisson;
+// Import the RedissonClient interface
+import org.redisson.api.RedissonClient;
 import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
@@ -31,15 +33,20 @@ public class CacheConfiguration {
     private GitProperties gitProperties;
     private BuildProperties buildProperties;
 
-    @Bean
-    public javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration(JHipsterProperties jHipsterProperties) {
-        MutableConfiguration<Object, Object> jcacheConfig = new MutableConfiguration<>();
+    /**
+     * Creates the RedissonClient bean using JHipster properties.
+     * This bean manages the connection pool to Redis and can be injected
+     * into other components like JCache or Bucket4j.
+     * destroyMethod ensures Redisson shuts down cleanly with the application.
+     */
+    @Bean(destroyMethod = "shutdown")
+    public RedissonClient redissonClient(JHipsterProperties jHipsterProperties) {
+        Config config = new Config();
+        // Use the same codec as your original jcacheConfiguration
+        config.setCodec(new org.redisson.codec.SerializationCodec());
 
         URI redisUri = URI.create(jHipsterProperties.getCache().getRedis().getServer()[0]);
 
-        Config config = new Config();
-        // Fix Hibernate lazy initialization https://github.com/jhipster/generator-jhipster/issues/22889
-        config.setCodec(new org.redisson.codec.SerializationCodec());
         if (jHipsterProperties.getCache().getRedis().isCluster()) {
             ClusterServersConfig clusterServersConfig = config
                 .useClusterServers()
@@ -63,13 +70,32 @@ public class CacheConfiguration {
                 singleServerConfig.setPassword(redisUri.getUserInfo().substring(redisUri.getUserInfo().indexOf(':') + 1));
             }
         }
+        // Create and return the RedissonClient instance
+        return Redisson.create(config);
+    }
+
+    /**
+     * Configures JCache (used by Hibernate 2nd level cache) to use the
+     * RedissonClient bean created above.
+     * Inject RedissonClient instead of creating a new instance here.
+     */
+    @Bean
+    public javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration(
+        JHipsterProperties jHipsterProperties,
+        RedissonClient redissonClient // Inject the shared RedissonClient bean
+    ) {
+        MutableConfiguration<Object, Object> jcacheConfig = new MutableConfiguration<>();
+
         jcacheConfig.setStatisticsEnabled(true);
         jcacheConfig.setExpiryPolicyFactory(
             CreatedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS, jHipsterProperties.getCache().getRedis().getExpiration()))
         );
-        return RedissonConfiguration.fromInstance(Redisson.create(config), jcacheConfig);
+
+        // Use the injected redissonClient bean
+        return RedissonConfiguration.fromInstance(redissonClient, jcacheConfig);
     }
 
+    // --- NO CHANGES NEEDED BELOW THIS LINE ---
     @Bean
     public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(javax.cache.CacheManager cm) {
         return hibernateProperties -> hibernateProperties.put(ConfigSettings.CACHE_MANAGER, cm);
@@ -104,7 +130,7 @@ public class CacheConfiguration {
     ) {
         javax.cache.Cache<Object, Object> cache = cm.getCache(cacheName);
         if (cache != null) {
-            cache.clear();
+            cache.clear(); // Keep your original behaviour
         } else {
             cm.createCache(cacheName, jcacheConfiguration);
         }
@@ -124,4 +150,5 @@ public class CacheConfiguration {
     public KeyGenerator keyGenerator() {
         return new PrefixedKeyGenerator(this.gitProperties, this.buildProperties);
     }
+    // --- End of unchanged section ---
 }
