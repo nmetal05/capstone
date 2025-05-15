@@ -1,0 +1,124 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType oauth2
+    baseName allomed
+    buildTool gradle
+    cacheProvider redis
+    clientFramework react
+    clientTheme none
+    creationTimestamp 1745507839376
+    databaseType sql
+    devDatabaseType postgresql
+    enableGradleEnterprise false
+    enableHibernateCache true
+    enableSwaggerCodegen true
+    enableTranslation true
+    jhipsterVersion "8.10.0"
+    languages [en, ar-ly, fr, de]
+    microfrontends []
+    nativeLanguage en
+    packageName com.allomed.app
+    prodDatabaseType postgresql
+    reactive false
+    searchEngine elasticsearch
+    skipUserManagement true
+    testFrameworks [gatling, cucumber, cypress]
+    withAdminUi true
+  }
+
+  entities AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation
+}
+
+@ChangelogDate("20250426140909")
+entity AppUserProfile {
+  latitude Double
+  longitude Double
+  lastLoginIp String
+  lastUserAgent String
+  lastLoginDate Instant
+}
+@ChangelogDate("20250426140914")
+entity DoctorDocument {
+  type DocumentType required
+  fileName String required
+  fileContent AnyBlob required
+  uploadDate Instant required
+  verificationStatus VerificationStatus required
+}
+@ChangelogDate("20250426140910")
+entity DoctorProfile {
+  phoneNumber String required
+  officeAddress String required
+  latitude Double required
+  longitude Double required
+  inpeCode String required unique
+  isVerified Boolean required
+  lastLoginIp String
+  lastUserAgent String
+  lastLoginDate Instant
+}
+@ChangelogDate("20250426140916")
+entity DoctorViewHistory {
+  viewDate Instant required
+}
+@ChangelogDate("20250426140915")
+entity GuestSession {
+  sessionId String required unique
+  createdAt Instant required
+  lastActiveAt Instant required
+  ipAddress String required
+  userAgent String required
+}
+@ChangelogDate("20250426140911")
+entity Specialization {
+  name String required unique
+  description String
+}
+@ChangelogDate("20250426140912")
+entity SymptomSearch {
+  searchDate Instant required
+  symptoms String required
+  aiResponseJson TextBlob required
+}
+@ChangelogDate("20250426140913")
+entity SymptomSearchRecommendation {
+  confidenceScore Double required
+  rank Integer required
+  reasoning String required
+}
+
+enum DocumentType {
+  DIPLOMA,
+  CV,
+  LICENSE,
+  OTHER
+}
+enum VerificationStatus {
+  PENDING,
+  VERIFIED,
+  REJECTED
+}
+
+relationship OneToOne {
+  @Id @OnDelete(CASCADE) AppUserProfile{internalUser(login)} to User with builtInEntity
+  @Id @OnDelete(CASCADE) DoctorProfile{internalUser(login)} to User with builtInEntity
+}
+relationship ManyToOne {
+  DoctorDocument{doctor required} to DoctorProfile
+  DoctorViewHistory{user required} to AppUserProfile
+  DoctorViewHistory{doctor required} to DoctorProfile
+  SymptomSearch{user} to AppUserProfile
+  SymptomSearch{guestSession} to GuestSession
+  SymptomSearchRecommendation{search required} to SymptomSearch
+  SymptomSearchRecommendation{specialization required} to Specialization
+}
+relationship ManyToMany {
+  DoctorProfile{specializations(name)} to Specialization{doctorProfiles}
+}
+
+dto AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with mapstruct
+paginate AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with pagination
+service AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with serviceImpl
+search DoctorProfile with elasticsearch
+filter DoctorProfile, Specialization

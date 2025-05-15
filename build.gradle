@@ -122,6 +122,8 @@ configurations {
 }
 
 dependencies {
+    /* ─ .ENV file support ─ */
+    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
     /* ─ Bucket4j with Redisson backend (Java 17) ─ */
     implementation 'com.bucket4j:bucket4j_jdk17-core:8.14.0'
     implementation 'com.bucket4j:bucket4j_jdk17-redis-common:8.14.0'

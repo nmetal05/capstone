@@ -23,7 +23,6 @@ export const Home = () => {
 
   return (
     <Row>
-      <Col md="3" className="pad"></Col>
       <Col md="9">
         <h1 className="display-4">
           <Translate contentKey="home.title">Welcome, Java Hipster!</Translate>

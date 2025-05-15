@@ -4,31 +4,42 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Properties specific to Allomed.
- * Properties are configured in the {@code application.yml} file
- * under the "application.*" namespace.
+ *
+ * They are configured in the {@code application*.yml} files
+ * (or .env, thanks to spring-dotenv) under the "application.*" namespace.
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
 
     private final Liquibase liquibase = new Liquibase();
-    private final Ai ai = new Ai(); // <── NEW
+    private final Ai ai = new Ai();
+    private final ExternalPlaces externalPlaces = new ExternalPlaces();
 
-    // jhipster-needle-application-properties-property
-
+    // ------------------------------------------------------------------
+    // Getters for top-level groups
+    // ------------------------------------------------------------------
     public Liquibase getLiquibase() {
         return liquibase;
     }
 
-    public Ai getAi() { // <── NEW
+    public Ai getAi() {
         return ai;
     }
 
-    // jhipster-needle-application-properties-property-getter
+    public ExternalPlaces getExternalPlaces() {
+        return externalPlaces;
+    }
 
-    /* ---------------- Inner classes ---------------- */
+    // ------------------------------------------------------------------
+    // Inner classes
+    // ------------------------------------------------------------------
 
+    /**
+     * Liquibase-specific tuning options.
+     */
     public static class Liquibase {
 
+        /** Whether to run Liquibase asynchronously on startup. */
         private Boolean asyncStart = true;
 
         public Boolean getAsyncStart() {
@@ -40,12 +51,14 @@ public class ApplicationProperties {
         }
     }
 
-    // NEW inner class that holds the LM-Studio settings
+    /**
+     * Settings for the local LLM (LM-Studio) that analyses symptoms.
+     */
     public static class Ai {
 
-        /** LM Studio/OpenAI-compatible URL */
+        /** LM-Studio / OpenAI-compatible base URL. */
         private String url;
-        /** Max number of specialisations LLM may return */
+        /** Max number of specialisations the LLM may return. */
         private int maxSuggestions = 3;
 
         public String getUrl() {
@@ -60,9 +73,35 @@ public class ApplicationProperties {
             return maxSuggestions;
         }
 
-        public void setMaxSuggestions(int max) {
-            this.maxSuggestions = max;
+        public void setMaxSuggestions(int maxSuggestions) {
+            this.maxSuggestions = maxSuggestions;
         }
     }
-    // jhipster-needle-application-properties-property-class
+
+    /**
+     * Configuration for external place-provider (Google Places).
+     */
+    public static class ExternalPlaces {
+
+        /** Which provider is active. Default = GOOGLE. */
+        private String provider = "GOOGLE";
+        /** API key or token for the chosen provider. */
+        private String apiKey;
+
+        public String getProvider() {
+            return provider;
+        }
+
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
+        }
+    }
 }
