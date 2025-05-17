@@ -111,11 +111,11 @@ public class SecurityConfiguration {
                     .requestMatchers(mvc.pattern("/api/auth-info")).permitAll()
 
                     // --- AI Endpoint Rule ---
-                    // Allow all access here. Anonymous users are permitted.
+                    // Allow all access here. Anonymous users are permitted./specializations
                     // Authenticated users (Admin, App User) are permitted.
                     // DOCTOR role will be blocked by the RateLimitingAspect's FORBIDDEN check later.
                     .requestMatchers(mvc.pattern("/api/ai/symptom-to-spec")).permitAll() // <<< Corrected: Only permitAll here
-
+                    .requestMatchers(mvc.pattern("/api/specializations")).permitAll()
                     // --- Other API Rules ---
                     .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
                     .requestMatchers(mvc.pattern("/api/**")).authenticated() // Default for others

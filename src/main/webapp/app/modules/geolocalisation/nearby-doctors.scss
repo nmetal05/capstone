@@ -1,0 +1,64 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.nearby-doctors-container {
+  padding: 2rem 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  min-height: 100vh;
+
+  .header-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .doctor-card {
+    border: none;
+    border-radius: 12px;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .opening-hours {
+      ul {
+        li {
+          padding: 0.25rem 0;
+          border-bottom: 1px solid #eee;
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+
+  .search-params {
+    .badge {
+      font-size: 0.9rem;
+      padding: 0.5em 0.8em;
+    }
+  }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(md) {
+  .nearby-doctors-container {
+    padding: 1rem;
+
+    .header-section {
+      padding: 1rem;
+    }
+  }
+}

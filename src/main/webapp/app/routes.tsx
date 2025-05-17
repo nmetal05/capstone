@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
+import { NearbyDoctors } from './modules/geolocalisation/nearby-doctors';
 
 import { AUTHORITIES } from 'app/config/constants';
 import PrivateRoute from 'app/shared/auth/private-route';
@@ -24,6 +25,7 @@ const AppRoutes = () => (
       <Route index element={<Home />} />
       <Route path="logout" element={<Logout />} />
       <Route path="sign-in" element={<LoginRedirect />} />
+      <Route path="doctors/nearby" element={<NearbyDoctors />} />
 
       {/* Administration */}
       <Route
