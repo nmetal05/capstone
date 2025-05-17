@@ -19,9 +19,9 @@ public class DoctorLocatorResource {
      * List nearby doctors by specialization, radius & optional sorting.
      *
      * Example:
-     * GET /api/doctors/nearby?spec=cardiology&lat=33.51&lon=-7.64&radiusKm=3
+     * GET /api/doctors/google/nearby?spec=cardiology&lat=33.51&lon=-7.64&radiusKm=3
      */
-    @GetMapping("/nearby")
+    @GetMapping("/google/nearby")
     public ResponseEntity<List<DoctorNearbyDTO>> nearby(
         @RequestParam String spec,
         @RequestParam double lat,
