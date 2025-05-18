@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Alert } from 'reactstrap';
 
+import { Translate } from 'react-jhipster';
 import { useAppDispatch } from 'app/config/store';
 import { completeRoleSelection } from 'app/shared/reducers/authentication';
 import { fetchProfileStatus, setDoctorProfileComplete, setHasDoctorProfile } from 'app/shared/reducers/profile';
@@ -55,7 +56,9 @@ const CompleteDoctorProfile = () => {
 
   return (
     <div className="container mt-4" style={{ maxWidth: '600px' }}>
-      <h2 className="mb-4">Complete Doctor Profile</h2>
+      <h2 className="mb-4">
+        <Translate contentKey="CompleteDoctorProfile.title">Complete Doctor Profile</Translate>
+      </h2>
 
       {error && (
         <Alert color="danger" className="text-center">

@@ -1,0 +1,9 @@
+{
+  "ChooseProfileType": {
+    "title": "Wählen Sie Ihren Profiltyp",
+    "regular_user": "Standardbenutzer",
+    "Signup": "Erstellen Sie ein Standardbenutzerkonto, um Ärzte und Dienste zu durchsuchen",
+    "DoctorSignup": "Erstellen Sie ein Ärzteprofil, um medizinische Dienste anzubieten",
+    "select": "Auswählen"
+  }
+}

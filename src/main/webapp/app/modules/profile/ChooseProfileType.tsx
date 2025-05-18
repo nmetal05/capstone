@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button, Card, Alert } from 'reactstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { Translate } from 'react-jhipster';
 import { useAppDispatch } from 'app/config/store';
 import { setUserRole, setSelectedRole } from 'app/shared/reducers/authentication';
 import { AUTHORITIES } from 'app/config/constants';
@@ -44,8 +45,9 @@ const ChooseProfileType = () => {
 
   return (
     <div className="p-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <h2 className="text-center mb-4">Choose Your Profile Type</h2>
-
+      <h2 className="text-center mb-4">
+        <Translate contentKey="ChooseProfileType.title">Choose Your Profile Type</Translate>
+      </h2>
       {error && (
         <Alert color="danger" className="text-center">
           {error}
@@ -55,8 +57,12 @@ const ChooseProfileType = () => {
       <div className="d-flex justify-content-center gap-4 flex-wrap">
         {/* Regular user */}
         <Card className="p-4 text-center" style={{ width: '300px' }}>
-          <h3>Regular User</h3>
-          <p className="mb-4">Create a standard user account to browse doctors and services</p>
+          <h3>
+            <Translate contentKey="ChooseProfileType.regular_user">Regular User</Translate>
+          </h3>
+          <p className="mb-4">
+            <Translate contentKey="ChooseProfileType.Signup">Create a standard user account to browse doctors and services</Translate>
+          </p>
           <Button color="success" disabled={loading} onClick={() => handleRoleSelect(AUTHORITIES.APP_USER)}>
             {loading ? 'Processing…' : 'Select'}
           </Button>
@@ -65,9 +71,11 @@ const ChooseProfileType = () => {
         {/* Doctor */}
         <Card className="p-4 text-center" style={{ width: '300px' }}>
           <h3>Doctor</h3>
-          <p className="mb-4">Create a doctor profile to offer medical services</p>
+          <p className="mb-4">
+            <Translate contentKey="ChooseProfileType.DoctorSignup">Create a doctor profile to offer medical services</Translate>
+          </p>
           <Button color="primary" onClick={() => handleRoleSelect(AUTHORITIES.DOCTOR)}>
-            Select
+            <Translate contentKey="ChooseProfileType.select">Select</Translate>
           </Button>
         </Card>
       </div>
