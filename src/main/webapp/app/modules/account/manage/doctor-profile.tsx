@@ -10,19 +10,14 @@ interface DoctorProfileProps {
 
 const DoctorProfile: React.FC<DoctorProfileProps> = ({ profile }) => {
   const [formData, setFormData] = useState({
-    id: profile.id,
+    id: profile.id || '',
     phoneNumber: profile.phoneNumber || '',
     officeAddress: profile.officeAddress || '',
-    specialization: profile.specialization || '',
-    licenseNumber: profile.licenseNumber || '',
-    yearsOfExperience: profile.yearsOfExperience || '',
-    consultationFee: profile.consultationFee || '',
-    workingHours: profile.workingHours || '',
+    inpeCode: profile.inpeCode || '',
     latitude: profile.latitude || 0,
     longitude: profile.longitude || 0,
-    inpeCode: profile.inpeCode || '',
     isVerified: profile.isVerified || false,
-    internalUser: profile.internalUser,
+    internalUser: profile.internalUser || null,
     specializations: profile.specializations || [],
   });
   const [success, setSuccess] = useState(false);
@@ -42,11 +37,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({ profile }) => {
     setError('');
 
     try {
-      await axios.patch(`/api/doctor-profiles/${profile.id}`, formData, {
-        headers: {
-          'Content-Type': 'application/merge-patch+json',
-        },
-      });
+      await axios.put(`/api/doctor-profiles/${profile.id}`, formData);
       setSuccess(true);
     } catch (err) {
       setError('account.manage.doctorProfile.error');
@@ -86,6 +77,7 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({ profile }) => {
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="account.manage.doctorProfile.phoneNumber.placeholder"
+              required
             />
           </FormGroup>
 
@@ -100,78 +92,31 @@ const DoctorProfile: React.FC<DoctorProfileProps> = ({ profile }) => {
               value={formData.officeAddress}
               onChange={handleChange}
               placeholder="account.manage.doctorProfile.officeAddress.placeholder"
+              required
             />
           </FormGroup>
 
           <FormGroup>
-            <Label for="specialization">
-              <Translate contentKey="account.manage.doctorProfile.specialization">Specialization</Translate>
+            <Label for="inpeCode">
+              <Translate contentKey="account.manage.doctorProfile.inpeCode">INPE Code</Translate>
             </Label>
             <Input
               type="text"
-              name="specialization"
-              id="specialization"
-              value={formData.specialization}
+              name="inpeCode"
+              id="inpeCode"
+              value={formData.inpeCode}
               onChange={handleChange}
-              placeholder="account.manage.doctorProfile.specialization.placeholder"
+              placeholder="account.manage.doctorProfile.inpeCode.placeholder"
+              required
             />
           </FormGroup>
 
-          <FormGroup>
-            <Label for="licenseNumber">
-              <Translate contentKey="account.manage.doctorProfile.licenseNumber">License Number</Translate>
-            </Label>
-            <Input
-              type="text"
-              name="licenseNumber"
-              id="licenseNumber"
-              value={formData.licenseNumber}
-              onChange={handleChange}
-              placeholder="account.manage.doctorProfile.licenseNumber.placeholder"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label for="yearsOfExperience">
-              <Translate contentKey="account.manage.doctorProfile.yearsOfExperience">Years of Experience</Translate>
-            </Label>
-            <Input
-              type="number"
-              name="yearsOfExperience"
-              id="yearsOfExperience"
-              value={formData.yearsOfExperience}
-              onChange={handleChange}
-              placeholder="account.manage.doctorProfile.yearsOfExperience.placeholder"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label for="consultationFee">
-              <Translate contentKey="account.manage.doctorProfile.consultationFee">Consultation Fee</Translate>
-            </Label>
-            <Input
-              type="number"
-              name="consultationFee"
-              id="consultationFee"
-              value={formData.consultationFee}
-              onChange={handleChange}
-              placeholder="account.manage.doctorProfile.consultationFee.placeholder"
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label for="workingHours">
-              <Translate contentKey="account.manage.doctorProfile.workingHours">Working Hours</Translate>
-            </Label>
-            <Input
-              type="text"
-              name="workingHours"
-              id="workingHours"
-              value={formData.workingHours}
-              onChange={handleChange}
-              placeholder="account.manage.doctorProfile.workingHours.placeholder"
-            />
-          </FormGroup>
+          <input type="hidden" name="id" value={formData.id} />
+          <input type="hidden" name="latitude" value={formData.latitude} />
+          <input type="hidden" name="longitude" value={formData.longitude} />
+          <input type="hidden" name="isVerified" value={formData.isVerified.toString()} />
+          <input type="hidden" name="internalUser" value={JSON.stringify(formData.internalUser)} />
+          <input type="hidden" name="specializations" value={JSON.stringify(formData.specializations)} />
 
           <Button type="submit" color="primary">
             <FontAwesomeIcon icon="save" className="me-2" />

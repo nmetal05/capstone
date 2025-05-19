@@ -5,14 +5,12 @@ import { Translate } from 'react-jhipster';
 import axios from 'axios';
 import BaseUserInfo from './base-user-info';
 import DoctorProfile from './doctor-profile';
-import AppUserProfile from './app-user-profile';
 import { AUTHORITIES } from 'app/config/constants';
 import './account-manage.scss';
 
 const AccountManage = () => {
   const [account, setAccount] = useState(null);
   const [doctorProfile, setDoctorProfile] = useState(null);
-  const [appUserProfile, setAppUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -23,9 +21,9 @@ const AccountManage = () => {
         const accountResponse = await axios.get('/api/account');
         setAccount(accountResponse.data);
 
-        // Get profile status to check if user has a doctor or app user profile
+        // Get profile status to check if user has a doctor profile
         const profileStatusResponse = await axios.get('/api/profile/status');
-        const { hasDoctorProfile, hasAppUserProfile } = profileStatusResponse.data;
+        const { hasDoctorProfile } = profileStatusResponse.data;
 
         // Check user authorities and fetch appropriate profile
         const authorities = accountResponse.data.authorities || [];
@@ -35,13 +33,6 @@ const AccountManage = () => {
           const currentDoctorProfile = doctorProfilesResponse.data.find(profile => profile.internalUser?.id === accountResponse.data.id);
           if (currentDoctorProfile) {
             setDoctorProfile(currentDoctorProfile);
-          }
-        } else if (authorities.includes(AUTHORITIES.APP_USER) && hasAppUserProfile) {
-          // Get all app user profiles and find the one for the current user
-          const appUserProfilesResponse = await axios.get('/api/app-user-profiles');
-          const currentAppUserProfile = appUserProfilesResponse.data.find(profile => profile.internalUser?.id === accountResponse.data.id);
-          if (currentAppUserProfile) {
-            setAppUserProfile(currentAppUserProfile);
           }
         }
       } catch (err) {
@@ -93,14 +84,6 @@ const AccountManage = () => {
           <Col md={12} className="mb-4">
             <Card>
               <DoctorProfile profile={doctorProfile} />
-            </Card>
-          </Col>
-        )}
-
-        {appUserProfile && (
-          <Col md={12} className="mb-4">
-            <Card>
-              <AppUserProfile profile={appUserProfile} />
             </Card>
           </Col>
         )}
