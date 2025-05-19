@@ -1,0 +1,64 @@
+{
+  "account": {
+    "manage": {
+      "title": "إدارة الحساب",
+      "loading": "جاري تحميل معلومات الحساب...",
+      "error": "خطأ في تحميل معلومات الحساب",
+      "baseInfo": {
+        "title": "المعلومات الأساسية",
+        "success": "تم تحديث المعلومات الأساسية بنجاح",
+        "error": "خطأ في تحديث المعلومات الأساسية",
+        "firstName": "الاسم الأول",
+        "firstName.placeholder": "أدخل اسمك الأول",
+        "lastName": "الاسم الأخير",
+        "lastName.placeholder": "أدخل اسمك الأخير",
+        "email": "البريد الإلكتروني",
+        "email.placeholder": "أدخل بريدك الإلكتروني",
+        "language": "اللغة",
+        "save": "حفظ التغييرات"
+      },
+      "doctorProfile": {
+        "title": "الملف الطبي",
+        "success": "تم تحديث الملف الطبي بنجاح",
+        "error": "خطأ في تحديث الملف الطبي",
+        "phoneNumber": "رقم الهاتف",
+        "phoneNumber.placeholder": "أدخل رقم هاتفك",
+        "officeAddress": "عنوان العيادة",
+        "officeAddress.placeholder": "أدخل عنوان عيادتك",
+        "specialization": "التخصص",
+        "specialization.placeholder": "أدخل تخصصك",
+        "licenseNumber": "رقم الترخيص",
+        "licenseNumber.placeholder": "أدخل رقم ترخيصك",
+        "yearsOfExperience": "سنوات الخبرة",
+        "yearsOfExperience.placeholder": "أدخل سنوات خبرتك",
+        "consultationFee": "رسوم الاستشارة",
+        "consultationFee.placeholder": "أدخل رسوم الاستشارة",
+        "workingHours": "ساعات العمل",
+        "workingHours.placeholder": "أدخل ساعات عملك",
+        "save": "حفظ التغييرات"
+      },
+      "appUserProfile": {
+        "title": "الملف الشخصي",
+        "success": "تم تحديث الملف الشخصي بنجاح",
+        "error": "خطأ في تحديث الملف الشخصي",
+        "phoneNumber": "رقم الهاتف",
+        "phoneNumber.placeholder": "أدخل رقم هاتفك",
+        "address": "العنوان",
+        "address.placeholder": "أدخل عنوانك",
+        "dateOfBirth": "تاريخ الميلاد",
+        "gender": "الجنس",
+        "gender.select": "اختر الجنس",
+        "gender.male": "ذكر",
+        "gender.female": "أنثى",
+        "gender.other": "آخر",
+        "bloodType": "فصيلة الدم",
+        "bloodType.select": "اختر فصيلة الدم",
+        "emergencyContact": "جهة الاتصال في حالات الطوارئ",
+        "emergencyContact.placeholder": "أدخل معلومات الاتصال في حالات الطوارئ",
+        "medicalHistory": "التاريخ الطبي",
+        "medicalHistory.placeholder": "أدخل تاريخك الطبي",
+        "save": "حفظ التغييرات"
+      }
+    }
+  }
+}

@@ -1,0 +1,123 @@
+.account-manage {
+  padding: 2rem;
+
+  h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 2rem;
+
+    .fa-user-cog {
+      color: #3498db;
+    }
+  }
+
+  .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      padding: 1.25rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #2c3e50;
+
+        .fa-user,
+        .fa-user-md {
+          color: #3498db;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      font-weight: 500;
+      color: #2c3e50;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      border: 1px solid #ced4da;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.75rem;
+      transition:
+        border-color 0.15s ease-in-out,
+        box-shadow 0.15s ease-in-out;
+
+      &:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+    }
+  }
+
+  .btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #2980b9;
+      border-color: #2980b9;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .fa-save {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .alert {
+    border: none;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    &.alert-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    &.alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  }
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #3498db;
+  }
+
+  .text-center {
+    p {
+      color: #6c757d;
+      margin-top: 1rem;
+    }
+  }
+}

@@ -1,0 +1,78 @@
+.card {
+  border: none;
+  border-radius: 12px;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .card-title {
+    color: #3f51b5;
+    font-weight: 600;
+  }
+
+  select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 0.25rem rgba(63, 81, 181, 0.25);
+    }
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3f51b5;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .form-check-input:checked {
+    background-color: #3f51b5;
+    border-color: #3f51b5;
+  }
+
+  .btn-primary {
+    background-color: #3f51b5;
+    border: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #303f9f;
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      background-color: #9fa8da;
+      transform: none;
+    }
+  }
+}

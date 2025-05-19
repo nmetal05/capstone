@@ -1,0 +1,88 @@
+.card {
+  border: none;
+  border-radius: 12px;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .card-title {
+    color: #3f51b5;
+    font-weight: 600;
+  }
+
+  textarea {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+
+    &:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 0.25rem rgba(63, 81, 181, 0.25);
+    }
+  }
+
+  .btn-primary {
+    background-color: #3f51b5;
+    border: none;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #303f9f;
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      background-color: #9fa8da;
+      transform: none;
+    }
+  }
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  .suggestion-card {
+    .alert {
+      padding: 1.25rem;
+      border-left: 4px solid;
+
+      &.alert-success {
+        border-left-color: #4caf50;
+      }
+
+      &.alert-info {
+        border-left-color: #2196f3;
+      }
+
+      &.alert-warning {
+        border-left-color: #ff9800;
+      }
+
+      &.alert-danger {
+        border-left-color: #f44336;
+      }
+
+      h5 {
+        font-weight: 600;
+      }
+
+      .badge {
+        font-size: 0.8rem;
+        padding: 0.35em 0.65em;
+      }
+    }
+  }
+}

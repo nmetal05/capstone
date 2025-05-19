@@ -2,6 +2,11 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
+@import './components/styles/hero-section.scss';
+@import './components/styles/auth-card.scss';
+@import './components/styles/symptom-analysis.scss';
+@import './components/styles/find-doctors.scss';
+
 .home-container {
   min-height: 100vh;
   padding: 2rem 0;

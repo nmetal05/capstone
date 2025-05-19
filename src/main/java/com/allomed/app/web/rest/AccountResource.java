@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,5 +64,25 @@ public class AccountResource {
     public ResponseEntity<Void> isAuthenticated(Principal principal) {
         LOG.debug("REST request to check if the current user is authenticated");
         return ResponseEntity.status(principal == null ? HttpStatus.UNAUTHORIZED : HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * {@code PUT  /account} : update the current user information.
+     *
+     * @param userDTO the current user information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated user.
+     * @throws AccountResourceException {@code 400 (Bad Request)} if the user information is not valid.
+     */
+    @PutMapping("/account")
+    public ResponseEntity<AdminUserDTO> updateAccount(@Valid @RequestBody AdminUserDTO userDTO) {
+        LOG.debug("REST request to update User : {}", userDTO);
+        userService.updateUser(
+            userDTO.getFirstName(),
+            userDTO.getLastName(),
+            userDTO.getEmail(),
+            userDTO.getLangKey(),
+            userDTO.getImageUrl()
+        );
+        return ResponseEntity.ok(userDTO);
     }
 }

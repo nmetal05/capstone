@@ -1,0 +1,64 @@
+{
+  "account": {
+    "manage": {
+      "title": "Gestion du compte",
+      "loading": "Chargement des informations du compte...",
+      "error": "Erreur lors du chargement des informations du compte",
+      "baseInfo": {
+        "title": "Informations de base",
+        "success": "Informations de base mises à jour avec succès",
+        "error": "Erreur lors de la mise à jour des informations de base",
+        "firstName": "Prénom",
+        "firstName.placeholder": "Entrez votre prénom",
+        "lastName": "Nom",
+        "lastName.placeholder": "Entrez votre nom",
+        "email": "Email",
+        "email.placeholder": "Entrez votre email",
+        "language": "Langue",
+        "save": "Enregistrer les modifications"
+      },
+      "doctorProfile": {
+        "title": "Profil du médecin",
+        "success": "Profil du médecin mis à jour avec succès",
+        "error": "Erreur lors de la mise à jour du profil du médecin",
+        "phoneNumber": "Numéro de téléphone",
+        "phoneNumber.placeholder": "Entrez votre numéro de téléphone",
+        "officeAddress": "Adresse du cabinet",
+        "officeAddress.placeholder": "Entrez l'adresse de votre cabinet",
+        "specialization": "Spécialisation",
+        "specialization.placeholder": "Entrez votre spécialisation",
+        "licenseNumber": "Numéro de licence",
+        "licenseNumber.placeholder": "Entrez votre numéro de licence",
+        "yearsOfExperience": "Années d'expérience",
+        "yearsOfExperience.placeholder": "Entrez vos années d'expérience",
+        "consultationFee": "Frais de consultation",
+        "consultationFee.placeholder": "Entrez les frais de consultation",
+        "workingHours": "Heures de travail",
+        "workingHours.placeholder": "Entrez vos heures de travail",
+        "save": "Enregistrer les modifications"
+      },
+      "appUserProfile": {
+        "title": "Profil utilisateur",
+        "success": "Profil mis à jour avec succès",
+        "error": "Erreur lors de la mise à jour du profil",
+        "phoneNumber": "Numéro de téléphone",
+        "phoneNumber.placeholder": "Entrez votre numéro de téléphone",
+        "address": "Adresse",
+        "address.placeholder": "Entrez votre adresse",
+        "dateOfBirth": "Date de naissance",
+        "gender": "Genre",
+        "gender.select": "Sélectionnez le genre",
+        "gender.male": "Masculin",
+        "gender.female": "Féminin",
+        "gender.other": "Autre",
+        "bloodType": "Groupe sanguin",
+        "bloodType.select": "Sélectionnez le groupe sanguin",
+        "emergencyContact": "Contact d'urgence",
+        "emergencyContact.placeholder": "Entrez les informations de contact d'urgence",
+        "medicalHistory": "Antécédents médicaux",
+        "medicalHistory.placeholder": "Entrez vos antécédents médicaux",
+        "save": "Enregistrer les modifications"
+      }
+    }
+  }
+}

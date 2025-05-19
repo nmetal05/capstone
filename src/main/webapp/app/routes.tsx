@@ -15,6 +15,7 @@ const CompleteDoctorProfile = Loadable({ loader: () => import('app/modules/profi
 const LoginRedirect = Loadable({ loader: () => import('app/modules/login/login-redirect'), loading: () => loading });
 const Logout = Loadable({ loader: () => import('app/modules/login/logout'), loading: () => loading });
 const Home = Loadable({ loader: () => import('app/modules/home/home'), loading: () => loading });
+const AccountManage = Loadable({ loader: () => import('app/modules/account'), loading: () => loading });
 const EntitiesRoutes = Loadable({ loader: () => import('app/entities/routes'), loading: () => loading });
 const PageNotFound = Loadable({ loader: () => import('app/shared/error/page-not-found'), loading: () => loading });
 
@@ -25,7 +26,24 @@ const AppRoutes = () => (
       <Route index element={<Home />} />
       <Route path="logout" element={<Logout />} />
       <Route path="sign-in" element={<LoginRedirect />} />
-      <Route path="doctors/nearby" element={<NearbyDoctors />} />
+      <Route
+        path="doctors/nearby"
+        element={
+          <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER, AUTHORITIES.ADMIN]}>
+            <NearbyDoctors />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Account Management */}
+      <Route
+        path="account/manage"
+        element={
+          <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.DOCTOR, AUTHORITIES.APP_USER]}>
+            <AccountManage />
+          </PrivateRoute>
+        }
+      />
 
       {/* Administration */}
       <Route

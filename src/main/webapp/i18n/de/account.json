@@ -1,0 +1,64 @@
+{
+  "account": {
+    "manage": {
+      "title": "Kontoverwaltung",
+      "loading": "Kontoinformationen werden geladen...",
+      "error": "Fehler beim Laden der Kontoinformationen",
+      "baseInfo": {
+        "title": "Grundinformationen",
+        "success": "Grundinformationen erfolgreich aktualisiert",
+        "error": "Fehler beim Aktualisieren der Grundinformationen",
+        "firstName": "Vorname",
+        "firstName.placeholder": "Geben Sie Ihren Vornamen ein",
+        "lastName": "Nachname",
+        "lastName.placeholder": "Geben Sie Ihren Nachnamen ein",
+        "email": "E-Mail",
+        "email.placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+        "language": "Sprache",
+        "save": "Änderungen speichern"
+      },
+      "doctorProfile": {
+        "title": "Arztprofil",
+        "success": "Arztprofil erfolgreich aktualisiert",
+        "error": "Fehler beim Aktualisieren des Arztprofils",
+        "phoneNumber": "Telefonnummer",
+        "phoneNumber.placeholder": "Geben Sie Ihre Telefonnummer ein",
+        "officeAddress": "Praxisadresse",
+        "officeAddress.placeholder": "Geben Sie Ihre Praxisadresse ein",
+        "specialization": "Fachgebiet",
+        "specialization.placeholder": "Geben Sie Ihr Fachgebiet ein",
+        "licenseNumber": "Lizenznummer",
+        "licenseNumber.placeholder": "Geben Sie Ihre Lizenznummer ein",
+        "yearsOfExperience": "Jahre Erfahrung",
+        "yearsOfExperience.placeholder": "Geben Sie Ihre Jahre an Erfahrung ein",
+        "consultationFee": "Konsultationsgebühr",
+        "consultationFee.placeholder": "Geben Sie Ihre Konsultationsgebühr ein",
+        "workingHours": "Arbeitszeiten",
+        "workingHours.placeholder": "Geben Sie Ihre Arbeitszeiten ein",
+        "save": "Änderungen speichern"
+      },
+      "appUserProfile": {
+        "title": "Benutzerprofil",
+        "success": "Profil erfolgreich aktualisiert",
+        "error": "Fehler beim Aktualisieren des Profils",
+        "phoneNumber": "Telefonnummer",
+        "phoneNumber.placeholder": "Geben Sie Ihre Telefonnummer ein",
+        "address": "Adresse",
+        "address.placeholder": "Geben Sie Ihre Adresse ein",
+        "dateOfBirth": "Geburtsdatum",
+        "gender": "Geschlecht",
+        "gender.select": "Geschlecht auswählen",
+        "gender.male": "Männlich",
+        "gender.female": "Weiblich",
+        "gender.other": "Andere",
+        "bloodType": "Blutgruppe",
+        "bloodType.select": "Blutgruppe auswählen",
+        "emergencyContact": "Notfallkontakt",
+        "emergencyContact.placeholder": "Geben Sie Ihre Notfallkontaktinformationen ein",
+        "medicalHistory": "Krankengeschichte",
+        "medicalHistory.placeholder": "Geben Sie Ihre Krankengeschichte ein",
+        "save": "Änderungen speichern"
+      }
+    }
+  }
+}

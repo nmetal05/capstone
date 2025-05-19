@@ -9,6 +9,9 @@ import { NavDropdown } from './menu-components';
 
 const accountMenuItemsAuthenticated = () => (
   <>
+    <MenuItem icon="cogs" to="/account/manage" data-cy="manageAccount">
+      <Translate contentKey="global.menu.account.manage">Manage Account</Translate>
+    </MenuItem>
     <MenuItem icon="sign-out-alt" to="/logout" data-cy="logout">
       <Translate contentKey="global.menu.account.logout">Sign out</Translate>
     </MenuItem>
