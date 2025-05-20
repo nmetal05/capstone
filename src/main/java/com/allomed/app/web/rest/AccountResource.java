@@ -2,6 +2,7 @@ package com.allomed.app.web.rest;
 
 import com.allomed.app.service.UserService;
 import com.allomed.app.service.dto.AdminUserDTO;
+import jakarta.validation.Valid;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
