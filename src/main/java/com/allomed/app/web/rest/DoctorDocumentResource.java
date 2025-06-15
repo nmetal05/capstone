@@ -107,8 +107,8 @@ public class DoctorDocumentResource {
      * @param id the id of the doctorDocumentDTO to save.
      * @param doctorDocumentDTO the doctorDocumentDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated doctorDocumentDTO,
-     * or with status {@code 400 (Bad Request)} if the doctorDocumentDTO is not valid,
      * or with status {@code 404 (Not Found)} if the doctorDocumentDTO is not found,
+     * or with status {@code 400 (Bad Request)} if the doctorDocumentDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the doctorDocumentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
@@ -151,6 +151,19 @@ public class DoctorDocumentResource {
         Page<DoctorDocumentDTO> page = doctorDocumentService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /doctor-documents/doctor/:doctorId} : get all the doctorDocuments for a specific doctor.
+     *
+     * @param doctorId the id of the doctor.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of doctorDocuments in body.
+     */
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<DoctorDocumentDTO>> getDoctorDocumentsByDoctorId(@PathVariable String doctorId) {
+        LOG.debug("REST request to get DoctorDocuments for doctor : {}", doctorId);
+        List<DoctorDocumentDTO> documents = doctorDocumentService.findByDoctorId(doctorId);
+        return ResponseEntity.ok().body(documents);
     }
 
     /**

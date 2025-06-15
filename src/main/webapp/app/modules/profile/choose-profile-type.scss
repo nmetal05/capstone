@@ -1,0 +1,235 @@
+.choose-profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.choose-profile-content {
+  max-width: 1000px;
+  width: 100%;
+}
+
+.welcome-icon {
+  font-size: 4rem;
+  color: white;
+  opacity: 0.9;
+}
+
+.welcome-title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+.error-alert {
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+}
+
+.profile-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.profile-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background: white;
+  overflow: hidden;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-body {
+    padding: 2.5rem;
+    text-align: center;
+    position: relative;
+  }
+}
+
+.user-card {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #20c997);
+  }
+}
+
+.doctor-card {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #1976d2, #42a5f5);
+  }
+}
+
+.profile-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  color: white;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+}
+
+.user-icon {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.doctor-icon {
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+}
+
+.profile-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.profile-description {
+  color: #6c757d;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.profile-features {
+  margin-bottom: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0;
+  color: #495057;
+
+  .feature-icon {
+    width: 20px;
+    margin-right: 0.75rem;
+    color: #1976d2;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.9rem;
+  }
+}
+
+.profile-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  transition: all 0.3s ease;
+  text-transform: none;
+  font-size: 1rem;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .choose-profile-container {
+    padding: 1rem;
+  }
+
+  .welcome-title {
+    font-size: 2rem;
+  }
+
+  .welcome-subtitle {
+    font-size: 1rem;
+  }
+
+  .profile-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .profile-card .card-body {
+    padding: 2rem 1.5rem;
+  }
+
+  .profile-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .profile-title {
+    font-size: 1.3rem;
+  }
+
+  .feature-item {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card .card-body {
+    padding: 1.5rem 1rem;
+  }
+}

@@ -1,0 +1,286 @@
+.complete-doctor-profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.complete-doctor-profile-content {
+  max-width: 600px;
+  width: 100%;
+}
+
+.profile-form-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background: white;
+
+  .card-header {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    border: none;
+  }
+
+  .card-body {
+    padding: 2.5rem 2rem;
+  }
+}
+
+.header-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.header-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.form-alert {
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 4px 20px rgba(220, 53, 69, 0.2);
+}
+
+.form-group-custom {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+
+  .label-icon {
+    margin-right: 0.5rem;
+    color: #1976d2;
+    width: 16px;
+  }
+}
+
+.form-input {
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+
+  &:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.15);
+    background: white;
+  }
+
+  &.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+  }
+
+  &::placeholder {
+    color: #6c757d;
+    opacity: 0.7;
+  }
+}
+
+.location-section {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 2px solid #e9ecef;
+}
+
+.location-status {
+  margin-bottom: 1rem;
+}
+
+.location-loading {
+  color: #1976d2;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(25, 118, 210, 0.1);
+  border-radius: 8px;
+}
+
+.location-error {
+  color: #dc3545;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(220, 53, 69, 0.1);
+  border-radius: 8px;
+}
+
+.location-success {
+  color: #28a745;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+}
+
+.location-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.location-button {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  }
+}
+
+.manual-coordinates {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.form-label-small {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-input-small {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+
+  &:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 0.15rem rgba(25, 118, 210, 0.1);
+  }
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  transition: all 0.3s ease;
+  text-transform: none;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .complete-doctor-profile-container {
+    padding: 1rem;
+  }
+
+  .profile-form-card {
+    .card-header {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .card-body {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  .header-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .header-title {
+    font-size: 1.5rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .form-group-custom {
+    margin-bottom: 1.5rem;
+  }
+
+  .location-section {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .complete-doctor-profile-container {
+    padding: 0.5rem;
+  }
+
+  .profile-form-card {
+    .card-header {
+      padding: 1.5rem 1rem;
+    }
+
+    .card-body {
+      padding: 1.5rem 1rem;
+    }
+  }
+
+  .submit-button {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+}

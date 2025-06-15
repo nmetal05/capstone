@@ -27,7 +27,7 @@ application {
     withAdminUi true
   }
 
-  entities AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation
+  entities AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation, DoctorAvailability
 }
 
 @ChangelogDate("20250426140909")
@@ -87,6 +87,16 @@ entity SymptomSearchRecommendation {
   rank Integer required
   reasoning String required
 }
+@ChangelogDate("20250426140917")
+entity DoctorAvailability {
+  dayOfWeek DayOfWeek required
+  startTime LocalTime required
+  endTime LocalTime required
+  isAvailable Boolean required
+  recurrenceType RecurrenceType required
+  validFrom LocalDate required
+  validTo LocalDate
+}
 
 enum DocumentType {
   DIPLOMA,
@@ -98,6 +108,21 @@ enum VerificationStatus {
   PENDING,
   VERIFIED,
   REJECTED
+}
+enum DayOfWeek {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY
+}
+enum RecurrenceType {
+  ONCE,
+  WEEKLY,
+  MONTHLY,
+  YEARLY
 }
 
 relationship OneToOne {
@@ -112,13 +137,14 @@ relationship ManyToOne {
   SymptomSearch{guestSession} to GuestSession
   SymptomSearchRecommendation{search required} to SymptomSearch
   SymptomSearchRecommendation{specialization required} to Specialization
+  DoctorAvailability{doctor required} to DoctorProfile
 }
 relationship ManyToMany {
   DoctorProfile{specializations(name)} to Specialization{doctorProfiles}
 }
 
-dto AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with mapstruct
-paginate AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with pagination
-service AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation with serviceImpl
+dto AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation, DoctorAvailability with mapstruct
+paginate AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation, DoctorAvailability with pagination
+service AppUserProfile, DoctorDocument, DoctorProfile, DoctorViewHistory, GuestSession, Specialization, SymptomSearch, SymptomSearchRecommendation, DoctorAvailability with serviceImpl
 search DoctorProfile with elasticsearch
-filter DoctorProfile, Specialization
+filter DoctorProfile, Specialization, DoctorAvailability

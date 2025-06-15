@@ -6,7 +6,9 @@ import com.allomed.app.repository.search.DoctorDocumentSearchRepository;
 import com.allomed.app.service.DoctorDocumentService;
 import com.allomed.app.service.dto.DoctorDocumentDTO;
 import com.allomed.app.service.mapper.DoctorDocumentMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -102,5 +104,12 @@ public class DoctorDocumentServiceImpl implements DoctorDocumentService {
     public Page<DoctorDocumentDTO> search(String query, Pageable pageable) {
         LOG.debug("Request to search for a page of DoctorDocuments for query {}", query);
         return doctorDocumentSearchRepository.search(query, pageable).map(doctorDocumentMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DoctorDocumentDTO> findByDoctorId(String doctorId) {
+        LOG.debug("Request to get all DoctorDocuments for doctor : {}", doctorId);
+        return doctorDocumentRepository.findByDoctorId(doctorId).stream().map(doctorDocumentMapper::toDto).collect(Collectors.toList());
     }
 }

@@ -1,0 +1,297 @@
+.admin-dashboard {
+  .card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+  }
+
+  .card-title {
+    color: #1976d2;
+    font-weight: 600;
+  }
+
+  // Filter Buttons
+  .btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &.btn-primary {
+      background-color: #1976d2;
+      border-color: #1976d2;
+
+      &:hover {
+        background-color: #1565c0;
+        border-color: #1565c0;
+        box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+      }
+    }
+
+    &.btn-outline-primary {
+      color: #1976d2;
+      border-color: #1976d2;
+
+      &:hover {
+        background-color: #1976d2;
+        border-color: #1976d2;
+      }
+    }
+
+    &.btn-warning {
+      background-color: #ff9800;
+      border-color: #ff9800;
+
+      &:hover {
+        background-color: #f57c00;
+        border-color: #f57c00;
+      }
+    }
+
+    &.btn-outline-warning {
+      color: #ff9800;
+      border-color: #ff9800;
+
+      &:hover {
+        background-color: #ff9800;
+        border-color: #ff9800;
+        color: white;
+      }
+    }
+
+    &.btn-success {
+      background-color: #4caf50;
+      border-color: #4caf50;
+
+      &:hover {
+        background-color: #388e3c;
+        border-color: #388e3c;
+      }
+    }
+
+    &.btn-outline-success {
+      color: #4caf50;
+      border-color: #4caf50;
+
+      &:hover {
+        background-color: #4caf50;
+        border-color: #4caf50;
+        color: white;
+      }
+    }
+
+    &.btn-danger {
+      background-color: #f44336;
+      border-color: #f44336;
+
+      &:hover {
+        background-color: #d32f2f;
+        border-color: #d32f2f;
+      }
+    }
+
+    &.btn-outline-danger {
+      color: #f44336;
+      border-color: #f44336;
+
+      &:hover {
+        background-color: #f44336;
+        border-color: #f44336;
+        color: white;
+      }
+    }
+  }
+
+  // Statistics Cards
+  .stats-card {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+    border: 1px solid #e3f2fd;
+    text-align: center;
+
+    .stat-icon {
+      margin-bottom: 12px;
+
+      i {
+        font-size: 2rem;
+      }
+    }
+
+    .stat-info {
+      h4 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #333;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: #666;
+        font-weight: 500;
+        margin: 0;
+      }
+    }
+  }
+
+  // Document Cards
+  .document-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border-color: #1976d2;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #1976d2, #42a5f5);
+    }
+
+    .stat-icon {
+      i {
+        font-size: 1.5rem;
+      }
+    }
+
+    .stat-info {
+      h4 {
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+      }
+
+      .stat-value {
+        color: #1976d2;
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        word-break: break-word;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 0.875rem;
+        margin-bottom: 8px;
+      }
+
+      small {
+        color: #999;
+        font-size: 0.8rem;
+      }
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 500;
+
+      &.bg-success {
+        background-color: #4caf50 !important;
+      }
+
+      &.bg-danger {
+        background-color: #f44336 !important;
+      }
+
+      &.bg-warning {
+        background-color: #ff9800 !important;
+        color: #fff;
+      }
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+  }
+
+  // Shared Stat Card Base
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border-color: #1976d2;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #1976d2, #42a5f5);
+    }
+  }
+
+  // Empty States
+  .text-center {
+    .fa-3x {
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+
+    h5 {
+      color: #666;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .text-muted {
+      color: #999 !important;
+    }
+  }
+
+  // Loading States
+  .fa-spinner {
+    color: #1976d2;
+  }
+
+  // Responsive Design
+  @media (max-width: 768px) {
+    .d-flex.gap-2 {
+      flex-direction: column;
+      gap: 0.5rem !important;
+
+      .btn {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .document-card {
+      margin-bottom: 16px;
+    }
+
+    .stats-card {
+      margin-bottom: 16px;
+    }
+  }
+}

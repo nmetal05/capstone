@@ -2,6 +2,7 @@
   "ChooseProfileType": {
     "title": "Choisissez votre type de profil",
     "regular_user": "Utilisateur standard",
+    "doctor": "Médecin",
     "Signup": "Créer un compte utilisateur standard pour consulter médecins et services",
     "DoctorSignup": "Créer un profil médecin pour proposer des services médicaux",
     "select": "Sélectionner"

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <property name="now" value="current_timestamp" dbms="postgresql"/>
     <property name="floatType" value="float4" dbms="postgresql"/>
     <property name="clobType" value="clob" dbms="postgresql"/>
@@ -20,6 +22,7 @@
     <include file="config/liquibase/changelog/20250426140914_added_entity_DoctorDocument.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140915_added_entity_GuestSession.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140916_added_entity_DoctorViewHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250426140917_added_entity_DoctorAvailability.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20250426140909_added_entity_constraints_AppUserProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140910_added_entity_constraints_DoctorProfile.xml" relativeToChangelogFile="false"/>
@@ -27,6 +30,7 @@
     <include file="config/liquibase/changelog/20250426140913_added_entity_constraints_SymptomSearchRecommendation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140914_added_entity_constraints_DoctorDocument.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140916_added_entity_constraints_DoctorViewHistory.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250426140917_added_entity_constraints_DoctorAvailability.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

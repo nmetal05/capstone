@@ -1,6 +1,7 @@
 package com.allomed.app.service;
 
 import com.allomed.app.service.dto.DoctorDocumentDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,4 +66,12 @@ public interface DoctorDocumentService {
      * @return the list of entities.
      */
     Page<DoctorDocumentDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get all the doctorDocuments for a specific doctor.
+     *
+     * @param doctorId the id of the doctor.
+     * @return the list of entities.
+     */
+    List<DoctorDocumentDTO> findByDoctorId(String doctorId);
 }

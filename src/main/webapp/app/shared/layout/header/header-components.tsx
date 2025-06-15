@@ -30,3 +30,12 @@ export const Home = () => (
     </NavLink>
   </NavItem>
 );
+
+export const AdminDashboard = () => (
+  <NavItem>
+    <NavLink tag={Link} to="/admin/dashboard" className="d-flex align-items-center">
+      <FontAwesomeIcon icon="shield-alt" />
+      <span>Admin Dashboard</span>
+    </NavLink>
+  </NavItem>
+);

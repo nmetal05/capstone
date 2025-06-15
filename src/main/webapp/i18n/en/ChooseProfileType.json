@@ -2,6 +2,7 @@
   "ChooseProfileType": {
     "title": "Choose Your Profile Type",
     "regular_user": "Regular User",
+    "doctor": "Doctor",
     "Signup": "Create a standard user account to browse doctors and services",
     "DoctorSignup": "Create a doctor profile to offer medical services",
     "select": "Select"

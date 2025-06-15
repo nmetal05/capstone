@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { Button, Card, Alert } from 'reactstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Translate } from 'react-jhipster';
 import { useAppDispatch } from 'app/config/store';
 import { setUserRole, setSelectedRole } from 'app/shared/reducers/authentication';
 import { AUTHORITIES } from 'app/config/constants';
+import './choose-profile-type.scss';
 
 /* helper: "ROLE_FOO" → "FOO" */
 const authorityToApiEnum = (a: string) => a.replace(/^ROLE_/, '');
@@ -44,40 +46,111 @@ const ChooseProfileType = () => {
   };
 
   return (
-    <div className="p-5" style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <h2 className="text-center mb-4">
-        <Translate contentKey="ChooseProfileType.title">Choose Your Profile Type</Translate>
-      </h2>
-      {error && (
-        <Alert color="danger" className="text-center">
-          {error}
-        </Alert>
-      )}
+    <div className="choose-profile-container">
+      <div className="choose-profile-content">
+        <div className="text-center mb-5">
+          <div className="welcome-icon mb-3">
+            <FontAwesomeIcon icon="user-plus" />
+          </div>
+          <h1 className="welcome-title">
+            <Translate contentKey="ChooseProfileType.title">Choose Your Profile Type</Translate>
+          </h1>
+          <p className="welcome-subtitle">Select the type of account that best describes your role</p>
+        </div>
 
-      <div className="d-flex justify-content-center gap-4 flex-wrap">
-        {/* Regular user */}
-        <Card className="p-4 text-center" style={{ width: '300px' }}>
-          <h3>
-            <Translate contentKey="ChooseProfileType.regular_user">Regular User</Translate>
-          </h3>
-          <p className="mb-4">
-            <Translate contentKey="ChooseProfileType.Signup">Create a standard user account to browse doctors and services</Translate>
-          </p>
-          <Button color="success" disabled={loading} onClick={() => handleRoleSelect(AUTHORITIES.APP_USER)}>
-            {loading ? 'Processing…' : 'Select'}
-          </Button>
-        </Card>
+        {error && (
+          <Alert color="danger" className="error-alert">
+            <FontAwesomeIcon icon="exclamation-triangle" className="me-2" />
+            {error}
+          </Alert>
+        )}
 
-        {/* Doctor */}
-        <Card className="p-4 text-center" style={{ width: '300px' }}>
-          <h3>Doctor</h3>
-          <p className="mb-4">
-            <Translate contentKey="ChooseProfileType.DoctorSignup">Create a doctor profile to offer medical services</Translate>
-          </p>
-          <Button color="primary" onClick={() => handleRoleSelect(AUTHORITIES.DOCTOR)}>
-            <Translate contentKey="ChooseProfileType.select">Select</Translate>
-          </Button>
-        </Card>
+        <div className="profile-cards">
+          {/* Regular User Card */}
+          <Card className="profile-card user-card">
+            <div className="card-body">
+              <div className="profile-icon user-icon">
+                <FontAwesomeIcon icon="user" />
+              </div>
+              <h3 className="profile-title">
+                <Translate contentKey="ChooseProfileType.regular_user">Regular User</Translate>
+              </h3>
+              <p className="profile-description">
+                <Translate contentKey="ChooseProfileType.Signup">Create a standard user account to browse doctors and services</Translate>
+              </p>
+              <div className="profile-features">
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="search" className="feature-icon" />
+                  <span>Find doctors near you</span>
+                </div>
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="heart" className="feature-icon" />
+                  <span>Access health services</span>
+                </div>
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="calendar-alt" className="feature-icon" />
+                  <span>Book appointments</span>
+                </div>
+              </div>
+              <Button
+                color="success"
+                size="lg"
+                className="profile-button"
+                disabled={loading}
+                onClick={() => handleRoleSelect(AUTHORITIES.APP_USER)}
+              >
+                {loading ? (
+                  <>
+                    <FontAwesomeIcon icon="spinner" spin className="me-2" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <FontAwesomeIcon icon="check" className="me-2" />
+                    <Translate contentKey="ChooseProfileType.select">Select</Translate>
+                  </>
+                )}
+              </Button>
+            </div>
+          </Card>
+
+          {/* Doctor Card */}
+          <Card className="profile-card doctor-card">
+            <div className="card-body">
+              <div className="profile-icon doctor-icon">
+                <FontAwesomeIcon icon="user-md" />
+              </div>
+              <h3 className="profile-title">
+                <Translate contentKey="ChooseProfileType.doctor">Doctor</Translate>
+              </h3>
+              <p className="profile-description">
+                <Translate contentKey="ChooseProfileType.DoctorSignup">Create a doctor profile to offer medical services</Translate>
+              </p>
+              <div className="profile-features">
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="stethoscope" className="feature-icon" />
+                  <span>Manage your practice</span>
+                </div>
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="calendar-check" className="feature-icon" />
+                  <span>Set availability</span>
+                </div>
+                <div className="feature-item">
+                  <FontAwesomeIcon icon="file-medical" className="feature-icon" />
+                  <span>Submit credentials</span>
+                </div>
+              </div>
+              <Button color="primary" size="lg" className="profile-button" onClick={() => handleRoleSelect(AUTHORITIES.DOCTOR)}>
+                <FontAwesomeIcon icon="arrow-right" className="me-2" />
+                <Translate contentKey="ChooseProfileType.select">Select</Translate>
+              </Button>
+            </div>
+          </Card>
+        </div>
+
+        <div className="text-center mt-4">
+          <small className="text-muted">You can always update your profile information later</small>
+        </div>
       </div>
     </div>
   );

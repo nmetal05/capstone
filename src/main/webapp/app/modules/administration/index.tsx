@@ -7,10 +7,12 @@ import Health from './health/health';
 import Metrics from './metrics/metrics';
 import Configuration from './configuration/configuration';
 import Docs from './docs/docs';
+import AdminDashboard from './admin-dashboard/admin-dashboard';
 
 const AdministrationRoutes = () => (
   <div>
     <ErrorBoundaryRoutes>
+      <Route path="dashboard" element={<AdminDashboard />} />
       <Route path="health" element={<Health />} />
       <Route path="metrics" element={<Metrics />} />
       <Route path="configuration" element={<Configuration />} />
