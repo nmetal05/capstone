@@ -1,7 +1,10 @@
 package com.allomed.app.web.rest;
 
+import com.allomed.app.domain.enumeration.VerificationStatus;
 import com.allomed.app.repository.DoctorDocumentRepository;
 import com.allomed.app.service.DoctorDocumentService;
+import com.allomed.app.service.EmailNotificationService;
+import com.allomed.app.service.KeycloakAdminService;
 import com.allomed.app.service.dto.DoctorDocumentDTO;
 import com.allomed.app.web.rest.errors.BadRequestAlertException;
 import com.allomed.app.web.rest.errors.ElasticsearchExceptionMapper;
@@ -43,9 +46,20 @@ public class DoctorDocumentResource {
 
     private final DoctorDocumentRepository doctorDocumentRepository;
 
-    public DoctorDocumentResource(DoctorDocumentService doctorDocumentService, DoctorDocumentRepository doctorDocumentRepository) {
+    private final EmailNotificationService emailNotificationService;
+
+    private final KeycloakAdminService keycloakAdminService;
+
+    public DoctorDocumentResource(
+        DoctorDocumentService doctorDocumentService,
+        DoctorDocumentRepository doctorDocumentRepository,
+        EmailNotificationService emailNotificationService,
+        KeycloakAdminService keycloakAdminService
+    ) {
         this.doctorDocumentService = doctorDocumentService;
         this.doctorDocumentRepository = doctorDocumentRepository;
+        this.emailNotificationService = emailNotificationService;
+        this.keycloakAdminService = keycloakAdminService;
     }
 
     /**
@@ -214,6 +228,143 @@ public class DoctorDocumentResource {
             return ResponseEntity.ok().headers(headers).body(page.getContent());
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
+        }
+    }
+
+    /**
+     * {@code POST  /doctor-documents/:id/verify} : Verify a doctor document and send email notification.
+     *
+     * @param id the id of the doctorDocument to verify.
+     * @param verificationRequest the verification request containing status and optional comment.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated doctorDocumentDTO.
+     */
+    @PostMapping("/{id}/verify")
+    public ResponseEntity<DoctorDocumentDTO> verifyDoctorDocument(
+        @PathVariable("id") Long id,
+        @RequestBody VerificationRequest verificationRequest
+    ) {
+        LOG.debug("REST request to verify DoctorDocument : {} with status: {}", id, verificationRequest.getStatus());
+
+        Optional<DoctorDocumentDTO> optionalDocument = doctorDocumentService.findOneWithEagerRelationships(id);
+        if (optionalDocument.isEmpty()) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        DoctorDocumentDTO document = optionalDocument.get();
+
+        // Update verification status
+        document.setVerificationStatus(verificationRequest.getStatus());
+        document = doctorDocumentService.update(document);
+
+        // Send email notification
+        LOG.info("🔄 Starting email notification process for document ID: {}", id);
+        try {
+            if (document.getDoctor() != null) {
+                LOG.info("Doctor found: {}", document.getDoctor().getId());
+
+                if (document.getDoctor().getInternalUser() != null) {
+                    // We have the internal user DTO but it only has id and login - get email from Keycloak
+                    var internalUser = document.getDoctor().getInternalUser();
+                    String doctorUsername = internalUser.getLogin();
+
+                    LOG.info("Found doctor username from DTO: {}", doctorUsername);
+                    LOG.info("Getting email and name from Keycloak...");
+
+                    String doctorEmail = keycloakAdminService.getUserEmail(doctorUsername);
+                    String doctorName = keycloakAdminService.getUserFullName(doctorUsername);
+
+                    LOG.info("Doctor email from Keycloak: {}", doctorEmail);
+                    LOG.info("Doctor name from Keycloak: {}", doctorName);
+
+                    if (doctorEmail != null && !doctorEmail.trim().isEmpty()) {
+                        LOG.info("📧 Calling EmailNotificationService to send email...");
+                        emailNotificationService.sendDocumentVerificationEmail(
+                            doctorEmail,
+                            doctorName,
+                            document.getType().toString(),
+                            document.getVerificationStatus().toString(),
+                            verificationRequest.getComment()
+                        );
+                        LOG.info(
+                            "✅ Email notification process completed for doctor: {} and document: {}",
+                            doctorEmail,
+                            document.getType()
+                        );
+                    } else {
+                        LOG.warn("❌ Could not send email - doctor email not found in Keycloak for user: {}", doctorUsername);
+                    }
+                } else {
+                    // Fallback: try to get user email via Keycloak if internal user is null
+                    LOG.warn("⚠️ Internal user is null, attempting Keycloak fallback for doctor: {}", document.getDoctor().getId());
+
+                    // Try to find user by doctor ID (since doctor ID = user ID in your setup)
+                    try {
+                        String doctorEmail = keycloakAdminService.getUserEmailById(document.getDoctor().getId());
+                        String doctorName = keycloakAdminService.getUserFullNameById(document.getDoctor().getId());
+
+                        LOG.info("Fallback - Doctor email from Keycloak: {}", doctorEmail);
+                        LOG.info("Fallback - Doctor name from Keycloak: {}", doctorName);
+
+                        if (doctorEmail != null && !doctorEmail.trim().isEmpty()) {
+                            LOG.info("📧 Calling EmailNotificationService to send email (fallback)...");
+                            emailNotificationService.sendDocumentVerificationEmail(
+                                doctorEmail,
+                                doctorName,
+                                document.getType().toString(),
+                                document.getVerificationStatus().toString(),
+                                verificationRequest.getComment()
+                            );
+                            LOG.info(
+                                "✅ Email notification process completed via fallback for doctor: {} and document: {}",
+                                doctorEmail,
+                                document.getType()
+                            );
+                        } else {
+                            LOG.warn(
+                                "❌ Could not send email - doctor email not found via fallback for doctor: {}",
+                                document.getDoctor().getId()
+                            );
+                        }
+                    } catch (Exception keycloakEx) {
+                        LOG.error("❌ Failed to get doctor email via Keycloak fallback: {}", keycloakEx.getMessage());
+                    }
+                }
+            } else {
+                LOG.warn("❌ Could not send email - doctor not found for document: {}", id);
+            }
+        } catch (Exception e) {
+            LOG.error("❌ Exception occurred during email notification for document: {}", id);
+            LOG.error("Exception message: {}", e.getMessage());
+            LOG.error("Full exception details: ", e);
+        }
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, document.getId().toString()))
+            .body(document);
+    }
+
+    /**
+     * Request object for document verification
+     */
+    public static class VerificationRequest {
+
+        private VerificationStatus status;
+        private String comment;
+
+        public VerificationStatus getStatus() {
+            return status;
+        }
+
+        public void setStatus(VerificationStatus status) {
+            this.status = status;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
         }
     }
 }

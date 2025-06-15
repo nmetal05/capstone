@@ -6,6 +6,7 @@ import com.allomed.app.repository.search.DoctorDocumentSearchRepository;
 import com.allomed.app.service.DoctorDocumentService;
 import com.allomed.app.service.dto.DoctorDocumentDTO;
 import com.allomed.app.service.mapper.DoctorDocumentMapper;
+import com.allomed.app.service.mapper.DoctorDocumentMapperUtil;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,14 +32,18 @@ public class DoctorDocumentServiceImpl implements DoctorDocumentService {
 
     private final DoctorDocumentSearchRepository doctorDocumentSearchRepository;
 
+    private final DoctorDocumentMapperUtil doctorDocumentMapperUtil;
+
     public DoctorDocumentServiceImpl(
         DoctorDocumentRepository doctorDocumentRepository,
         DoctorDocumentMapper doctorDocumentMapper,
-        DoctorDocumentSearchRepository doctorDocumentSearchRepository
+        DoctorDocumentSearchRepository doctorDocumentSearchRepository,
+        DoctorDocumentMapperUtil doctorDocumentMapperUtil
     ) {
         this.doctorDocumentRepository = doctorDocumentRepository;
         this.doctorDocumentMapper = doctorDocumentMapper;
         this.doctorDocumentSearchRepository = doctorDocumentSearchRepository;
+        this.doctorDocumentMapperUtil = doctorDocumentMapperUtil;
     }
 
     @Override
@@ -90,6 +95,13 @@ public class DoctorDocumentServiceImpl implements DoctorDocumentService {
     public Optional<DoctorDocumentDTO> findOne(Long id) {
         LOG.debug("Request to get DoctorDocument : {}", id);
         return doctorDocumentRepository.findById(id).map(doctorDocumentMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DoctorDocumentDTO> findOneWithEagerRelationships(Long id) {
+        LOG.debug("Request to get DoctorDocument with eager relationships : {}", id);
+        return doctorDocumentRepository.findOneWithEagerRelationships(id).map(doctorDocumentMapperUtil::toDtoWithEagerRelationships);
     }
 
     @Override

@@ -4,6 +4,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import com.allomed.app.domain.DoctorDocument;
 import com.allomed.app.repository.DoctorDocumentRepository;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +37,8 @@ interface DoctorDocumentSearchRepositoryInternal {
 
 class DoctorDocumentSearchRepositoryInternalImpl implements DoctorDocumentSearchRepositoryInternal {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DoctorDocumentSearchRepositoryInternalImpl.class);
+
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final DoctorDocumentRepository repository;
 
@@ -58,7 +62,16 @@ class DoctorDocumentSearchRepositoryInternalImpl implements DoctorDocumentSearch
 
     @Override
     public void index(DoctorDocument entity) {
-        repository.findById(entity.getId()).ifPresent(elasticsearchTemplate::save);
+        repository
+            .findOneWithEagerRelationships(entity.getId())
+            .ifPresent(document -> {
+                try {
+                    elasticsearchTemplate.save(document);
+                    LOG.debug("Successfully indexed DoctorDocument with id: {}", entity.getId());
+                } catch (Exception e) {
+                    LOG.error("Failed to index DoctorDocument with id {}: {}", entity.getId(), e.getMessage(), e);
+                }
+            });
     }
 
     @Override

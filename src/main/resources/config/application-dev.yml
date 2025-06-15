@@ -15,10 +15,14 @@
 
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     com.allomed.app: DEBUG
+    org.springframework.mail: DEBUG
+    org.springframework.mail.javamail: DEBUG
+    javax.mail: DEBUG
+    com.sun.mail: DEBUG
 
 management:
   health:
@@ -54,6 +58,21 @@ spring:
     cache: false
   config:
     import: optional:file:.env[.properties]
+  mail:
+    # SMTP configuration using environment variables
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:your-email@gmail.com}
+    password: ${SMTP_PASSWORD:your-app-password}
+    from: ${SMTP_FROM:${SMTP_USERNAME:your-email@gmail.com}}
+    properties:
+      mail:
+        smtp:
+          auth: ${SMTP_AUTH:true}
+          starttls:
+            enable: ${SMTP_STARTTLS:true}
+          ssl:
+            trust: ${SMTP_SSL_TRUST:smtp.gmail.com}
 
 server:
   port: 8080

@@ -51,6 +51,14 @@ public interface DoctorDocumentService {
     Optional<DoctorDocumentDTO> findOne(Long id);
 
     /**
+     * Get the "id" doctorDocument with eager relationships.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Optional<DoctorDocumentDTO> findOneWithEagerRelationships(Long id);
+
+    /**
      * Delete the "id" doctorDocument.
      *
      * @param id the id of the entity.

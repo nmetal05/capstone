@@ -24,6 +24,10 @@ const AdminDashboard: React.FC = () => {
   const [documents, setDocuments] = useState<DoctorDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'VERIFIED' | 'REJECTED'>('PENDING');
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<DoctorDocument | null>(null);
+  const [comment, setComment] = useState('');
+  const [actionType, setActionType] = useState<'VERIFIED' | 'REJECTED'>('REJECTED');
 
   useEffect(() => {
     loadDocuments();
@@ -41,21 +45,45 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  const handleVerifyDocument = async (documentId: number, status: 'VERIFIED' | 'REJECTED' | 'PENDING') => {
+  const handleVerifyDocument = async (documentId: number, status: 'VERIFIED' | 'REJECTED' | 'PENDING', adminComment?: string) => {
     try {
-      const document = documents.find(doc => doc.id === documentId);
-      if (!document) return;
+      if (status === 'REJECTED' && !adminComment) {
+        // Show modal for rejection comment
+        const document = documents.find(doc => doc.id === documentId);
+        if (document) {
+          setSelectedDocument(document);
+          setActionType('REJECTED');
+          setShowCommentModal(true);
+        }
+        return;
+      }
 
-      const updatedDocument = {
-        ...document,
-        verificationStatus: status,
+      // Use the new verification endpoint that sends emails
+      const verificationRequest = {
+        status,
+        comment: adminComment || '',
       };
 
-      await axios.put(`/api/doctor-documents/${documentId}`, updatedDocument);
+      await axios.post(`/api/doctor-documents/${documentId}/verify`, verificationRequest);
       loadDocuments();
     } catch (error) {
       console.error('Error updating document status:', error);
     }
+  };
+
+  const handleModalSubmit = async () => {
+    if (selectedDocument) {
+      await handleVerifyDocument(selectedDocument.id, actionType, comment);
+      setShowCommentModal(false);
+      setSelectedDocument(null);
+      setComment('');
+    }
+  };
+
+  const handleModalCancel = () => {
+    setShowCommentModal(false);
+    setSelectedDocument(null);
+    setComment('');
   };
 
   const downloadDocument = (doc: DoctorDocument) => {
@@ -230,11 +258,11 @@ const AdminDashboard: React.FC = () => {
                         <>
                           <button className="btn btn-sm btn-success" onClick={() => handleVerifyDocument(document.id, 'VERIFIED')}>
                             <i className="fas fa-check me-1"></i>
-                            Verify
+                            Verify & Send Email
                           </button>
                           <button className="btn btn-sm btn-danger" onClick={() => handleVerifyDocument(document.id, 'REJECTED')}>
                             <i className="fas fa-times me-1"></i>
-                            Reject
+                            Reject & Send Email
                           </button>
                         </>
                       )}
@@ -253,6 +281,72 @@ const AdminDashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <div className="modal fade show d-block" tabIndex={-1} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  <i className="fas fa-comment me-2"></i>
+                  {actionType === 'REJECTED' ? 'Rejection Comment' : 'Verification Comment'}
+                </h5>
+                <button type="button" className="btn-close" onClick={handleModalCancel}></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <p className="text-muted">
+                    Document:{' '}
+                    <strong>
+                      {selectedDocument?.type} - {selectedDocument?.fileName}
+                    </strong>
+                  </p>
+                  <p className="text-muted">
+                    Doctor:{' '}
+                    <strong>
+                      {selectedDocument?.doctor.internalUser?.firstName} {selectedDocument?.doctor.internalUser?.lastName}
+                    </strong>
+                  </p>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="comment" className="form-label">
+                    {actionType === 'REJECTED' ? 'Reason for rejection (required):' : 'Comment (optional):'}
+                  </label>
+                  <textarea
+                    id="comment"
+                    className="form-control"
+                    rows={4}
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
+                    placeholder={
+                      actionType === 'REJECTED'
+                        ? 'Please provide a reason for rejecting this document...'
+                        : 'Add any additional comments...'
+                    }
+                    required={actionType === 'REJECTED'}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={handleModalCancel}>
+                  <i className="fas fa-times me-1"></i>
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${actionType === 'REJECTED' ? 'btn-danger' : 'btn-success'}`}
+                  onClick={handleModalSubmit}
+                  disabled={actionType === 'REJECTED' && !comment.trim()}
+                >
+                  <i className={`fas ${actionType === 'REJECTED' ? 'fa-times' : 'fa-check'} me-1`}></i>
+                  {actionType === 'REJECTED' ? 'Reject & Send Email' : 'Verify & Send Email'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
