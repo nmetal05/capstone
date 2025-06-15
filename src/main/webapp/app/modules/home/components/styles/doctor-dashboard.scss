@@ -545,6 +545,92 @@
     color: #1976d2;
   }
 
+  // Card actions styling
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+
+    .btn {
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+      font-weight: 500;
+      min-width: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      i {
+        font-size: 0.875rem;
+      }
+    }
+
+    .btn-primary {
+      background-color: #1976d2;
+      border-color: #1976d2;
+      color: white;
+
+      &:hover {
+        background-color: #1565c0;
+        border-color: #1565c0;
+        color: white;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+        border-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .btn-danger {
+      background-color: #f44336;
+      border-color: #f44336;
+      color: white;
+
+      &:hover {
+        background-color: #d32f2f;
+        border-color: #d32f2f;
+        color: white;
+      }
+    }
+  }
+
+  // Specializations specific styles
+  .specializations-list {
+    .stat-card {
+      .stat-icon {
+        i.fa-stethoscope {
+          color: #673ab7;
+        }
+      }
+
+      &:hover {
+        border-color: #673ab7;
+      }
+
+      &::before {
+        background: linear-gradient(90deg, #673ab7, #9c27b0);
+      }
+
+      .stat-info {
+        .stat-value {
+          color: #673ab7;
+        }
+      }
+    }
+  }
+
   // Responsive Design
   @media (max-width: 768px) {
     .nav-tabs {

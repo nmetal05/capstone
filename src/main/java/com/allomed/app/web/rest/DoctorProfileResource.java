@@ -228,4 +228,16 @@ public class DoctorProfileResource {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
     }
+
+    /**
+     * {@code GET  /doctor-profiles/current} : get the current user's doctor profile.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the doctorProfileDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/current")
+    public ResponseEntity<DoctorProfileDTO> getCurrentDoctorProfile() {
+        LOG.debug("REST request to get current user's DoctorProfile");
+        Optional<DoctorProfileDTO> doctorProfileDTO = doctorProfileService.findByCurrentUser();
+        return ResponseUtil.wrapOrNotFound(doctorProfileDTO);
+    }
 }

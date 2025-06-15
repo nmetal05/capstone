@@ -65,4 +65,11 @@ public interface DoctorProfileService {
      * @return the list of entities.
      */
     Page<DoctorProfileDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the current user's doctor profile.
+     *
+     * @return the entity.
+     */
+    Optional<DoctorProfileDTO> findByCurrentUser();
 }

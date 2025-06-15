@@ -4,10 +4,15 @@ import com.allomed.app.domain.DoctorProfile;
 import com.allomed.app.repository.DoctorProfileRepository;
 import com.allomed.app.repository.UserRepository;
 import com.allomed.app.repository.search.DoctorProfileSearchRepository;
+import com.allomed.app.security.SecurityUtils;
 import com.allomed.app.service.DoctorProfileService;
 import com.allomed.app.service.dto.DoctorProfileDTO;
 import com.allomed.app.service.mapper.DoctorProfileMapper;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -107,5 +112,15 @@ public class DoctorProfileServiceImpl implements DoctorProfileService {
     public Page<DoctorProfileDTO> search(String query, Pageable pageable) {
         LOG.debug("Request to search for a page of DoctorProfiles for query {}", query);
         return doctorProfileSearchRepository.search(query, pageable).map(doctorProfileMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<DoctorProfileDTO> findByCurrentUser() {
+        LOG.debug("Request to get current user's DoctorProfile");
+        return SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .flatMap(user -> doctorProfileRepository.findOneByInternalUser_Id(user.getId()))
+            .map(doctorProfileMapper::toDto);
     }
 }

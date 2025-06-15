@@ -26,15 +26,24 @@ interface DoctorDocument {
   doctorId?: string;
 }
 
+interface Specialization {
+  id: number;
+  name: string;
+  description?: string;
+}
+
 const DoctorDashboard: React.FC = () => {
   const account = useAppSelector(state => state.authentication.account);
-  const [activeTab, setActiveTab] = useState<'availability' | 'documents'>('availability');
+  const [activeTab, setActiveTab] = useState<'availability' | 'documents' | 'specializations'>('availability');
   const [availabilities, setAvailabilities] = useState<DoctorAvailability[]>([]);
   const [documents, setDocuments] = useState<DoctorDocument[]>([]);
+  const [specializations, setSpecializations] = useState<Specialization[]>([]);
+  const [availableSpecializations, setAvailableSpecializations] = useState<Specialization[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingAvailability, setEditingAvailability] = useState<DoctorAvailability | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showDocumentForm, setShowDocumentForm] = useState(false);
+  const [showSpecializationForm, setShowSpecializationForm] = useState(false);
   const [doctorProfile, setDoctorProfile] = useState<any>(null);
 
   const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
@@ -50,8 +59,11 @@ const DoctorDashboard: React.FC = () => {
     if (doctorProfile) {
       if (activeTab === 'availability') {
         loadAvailabilities();
-      } else {
+      } else if (activeTab === 'documents') {
         loadDocuments();
+      } else if (activeTab === 'specializations') {
+        loadSpecializations();
+        loadAvailableSpecializations();
       }
     }
   }, [doctorProfile, activeTab]);
@@ -59,9 +71,8 @@ const DoctorDashboard: React.FC = () => {
   const loadDoctorProfile = async () => {
     try {
       if (account?.id) {
-        const response = await axios.get('/api/doctor-profiles');
-        const profile = response.data.find((p: any) => p.internalUser?.id === account.id);
-        setDoctorProfile(profile);
+        const response = await axios.get('/api/doctor-profiles/current');
+        setDoctorProfile(response.data);
       }
     } catch (error) {
       console.error('Error loading doctor profile:', error);
@@ -164,6 +175,72 @@ const DoctorDashboard: React.FC = () => {
       loadDocuments();
     } catch (error) {
       console.error('Error deleting document:', error);
+    }
+  };
+
+  const loadSpecializations = () => {
+    try {
+      setLoading(true);
+      if (doctorProfile?.specializations) {
+        setSpecializations(doctorProfile.specializations);
+      }
+    } catch (error) {
+      console.error('Error loading specializations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadAvailableSpecializations = async () => {
+    try {
+      const response = await axios.get('/api/specializations?size=1000');
+      setAvailableSpecializations(response.data);
+    } catch (error) {
+      console.error('Error loading available specializations:', error);
+    }
+  };
+
+  const handleAddSpecialization = async (specializationId: number) => {
+    try {
+      if (!doctorProfile) return;
+
+      const updatedSpecializations = [...specializations];
+      const specializationToAdd = availableSpecializations.find(s => s.id === specializationId);
+
+      if (specializationToAdd && !updatedSpecializations.find(s => s.id === specializationId)) {
+        updatedSpecializations.push(specializationToAdd);
+
+        const updatedProfile = {
+          ...doctorProfile,
+          specializations: updatedSpecializations.map(s => ({ id: s.id })),
+        };
+
+        await axios.put(`/api/doctor-profiles/${doctorProfile.id}`, updatedProfile);
+        setSpecializations(updatedSpecializations);
+        setDoctorProfile({ ...doctorProfile, specializations: updatedSpecializations });
+        setShowSpecializationForm(false);
+      }
+    } catch (error) {
+      console.error('Error adding specialization:', error);
+    }
+  };
+
+  const handleRemoveSpecialization = async (specializationId: number) => {
+    try {
+      if (!doctorProfile) return;
+
+      const updatedSpecializations = specializations.filter(s => s.id !== specializationId);
+
+      const updatedProfile = {
+        ...doctorProfile,
+        specializations: updatedSpecializations.map(s => ({ id: s.id })),
+      };
+
+      await axios.put(`/api/doctor-profiles/${doctorProfile.id}`, updatedProfile);
+      setSpecializations(updatedSpecializations);
+      setDoctorProfile({ ...doctorProfile, specializations: updatedSpecializations });
+    } catch (error) {
+      console.error('Error removing specialization:', error);
     }
   };
 
@@ -361,6 +438,57 @@ const DoctorDashboard: React.FC = () => {
     );
   };
 
+  const SpecializationForm: React.FC<{
+    onAdd: (specializationId: number) => void;
+    onCancel: () => void;
+  }> = ({ onAdd, onCancel }) => {
+    const [selectedSpecializationId, setSelectedSpecializationId] = useState<number | null>(null);
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (selectedSpecializationId) {
+        onAdd(selectedSpecializationId);
+      }
+    };
+
+    const availableToAdd = availableSpecializations.filter(spec => !specializations.find(s => s.id === spec.id));
+
+    return (
+      <div className="availability-form">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Select Specialization</label>
+            <select
+              className="form-select"
+              value={selectedSpecializationId || ''}
+              onChange={e => setSelectedSpecializationId(Number(e.target.value))}
+              required
+            >
+              <option value="">Choose a specialization...</option>
+              {availableToAdd.map(specialization => (
+                <option key={specialization.id} value={specialization.id}>
+                  {specialization.name}
+                  {specialization.description && ` - ${specialization.description}`}
+                </option>
+              ))}
+            </select>
+            {availableToAdd.length === 0 && <small className="form-text text-muted">All available specializations have been added.</small>}
+          </div>
+          <div className="d-flex gap-2">
+            <button type="submit" className="btn btn-primary" disabled={!selectedSpecializationId}>
+              <i className="fas fa-plus me-2"></i>
+              Add Specialization
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={onCancel}>
+              <i className="fas fa-times me-2"></i>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  };
+
   if (!doctorProfile) {
     return (
       <div className="card shadow-sm h-100">
@@ -397,6 +525,15 @@ const DoctorDashboard: React.FC = () => {
             <button className={`nav-link ${activeTab === 'documents' ? 'active' : ''}`} onClick={() => setActiveTab('documents')}>
               <i className="fas fa-file-medical me-2"></i>
               Document Submission
+            </button>
+          </li>
+          <li className="nav-item">
+            <button
+              className={`nav-link ${activeTab === 'specializations' ? 'active' : ''}`}
+              onClick={() => setActiveTab('specializations')}
+            >
+              <i className="fas fa-stethoscope me-2"></i>
+              Specializations
             </button>
           </li>
         </ul>
@@ -457,29 +594,22 @@ const DoctorDashboard: React.FC = () => {
                           <div className="stat-icon">
                             <i className={`fas ${availability.isAvailable ? 'fa-check-circle' : 'fa-times-circle'}`}></i>
                           </div>
-                          <div className="dropdown">
-                            <button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                              <i className="fas fa-ellipsis-v"></i>
+                          <div className="card-actions">
+                            <button
+                              className="btn btn-sm btn-primary me-1"
+                              onClick={() => setEditingAvailability(availability)}
+                              disabled={showAddForm || !!editingAvailability}
+                            >
+                              <i className="fas fa-edit me-1"></i>
+                              Edit
                             </button>
-                            <ul className="dropdown-menu">
-                              <li>
-                                <button
-                                  className="dropdown-item"
-                                  onClick={() => setEditingAvailability(availability)}
-                                  disabled={showAddForm || !!editingAvailability}
-                                >
-                                  <i className="fas fa-edit me-2"></i>Edit
-                                </button>
-                              </li>
-                              <li>
-                                <button
-                                  className="dropdown-item text-danger"
-                                  onClick={() => availability.id && handleDeleteAvailability(availability.id)}
-                                >
-                                  <i className="fas fa-trash me-2"></i>Delete
-                                </button>
-                              </li>
-                            </ul>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              onClick={() => availability.id && handleDeleteAvailability(availability.id)}
+                            >
+                              <i className="fas fa-trash me-1"></i>
+                              Delete
+                            </button>
                           </div>
                         </div>
                         <div className="stat-info">
@@ -553,20 +683,11 @@ const DoctorDashboard: React.FC = () => {
                               }`}
                             ></i>
                           </div>
-                          <div className="dropdown">
-                            <button className="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                              <i className="fas fa-ellipsis-v"></i>
+                          <div className="card-actions">
+                            <button className="btn btn-sm btn-danger" onClick={() => document.id && handleDeleteDocument(document.id)}>
+                              <i className="fas fa-trash me-1"></i>
+                              Delete
                             </button>
-                            <ul className="dropdown-menu">
-                              <li>
-                                <button
-                                  className="dropdown-item text-danger"
-                                  onClick={() => document.id && handleDeleteDocument(document.id)}
-                                >
-                                  <i className="fas fa-trash me-2"></i>Delete
-                                </button>
-                              </li>
-                            </ul>
                           </div>
                         </div>
                         <div className="stat-info">
@@ -589,6 +710,75 @@ const DoctorDashboard: React.FC = () => {
                           {document.uploadDate && (
                             <small className="text-muted">Uploaded: {new Date(document.uploadDate).toLocaleDateString()}</small>
                           )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'specializations' && (
+          <div className="tab-content">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="mb-0">Manage Your Specializations</h5>
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowSpecializationForm(true)}
+                disabled={
+                  showSpecializationForm ||
+                  availableSpecializations.filter(spec => !specializations.find(s => s.id === spec.id)).length === 0
+                }
+              >
+                <i className="fas fa-plus me-2"></i>
+                Add Specialization
+              </button>
+            </div>
+
+            {showSpecializationForm && (
+              <div className="action-card mb-4">
+                <h5 className="mb-3">
+                  <i className="fas fa-plus me-2"></i>
+                  Add New Specialization
+                </h5>
+                <SpecializationForm onAdd={handleAddSpecialization} onCancel={() => setShowSpecializationForm(false)} />
+              </div>
+            )}
+
+            <div className="specializations-list">
+              {loading ? (
+                <div className="text-center py-4">
+                  <i className="fas fa-spinner fa-spin fa-2x text-muted"></i>
+                  <p className="text-muted mt-2">Loading specializations...</p>
+                </div>
+              ) : specializations.length === 0 ? (
+                <div className="text-center py-4">
+                  <i className="fas fa-stethoscope fa-3x text-muted mb-3"></i>
+                  <h5>No Specializations Added</h5>
+                  <p className="text-muted">Add your first specialization to showcase your medical expertise.</p>
+                </div>
+              ) : (
+                <div className="row">
+                  {specializations.map(specialization => (
+                    <div key={specialization.id} className="col-md-6 mb-3">
+                      <div className="stat-card">
+                        <div className="d-flex justify-content-between align-items-start mb-2">
+                          <div className="stat-icon">
+                            <i className="fas fa-stethoscope"></i>
+                          </div>
+                          <div className="card-actions">
+                            <button className="btn btn-sm btn-danger" onClick={() => handleRemoveSpecialization(specialization.id)}>
+                              <i className="fas fa-trash me-1"></i>
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                        <div className="stat-info">
+                          <h4>{specialization.name}</h4>
+                          {specialization.description && <p className="stat-value">{specialization.description}</p>}
+                          <p className="stat-label">Medical Specialization</p>
                         </div>
                       </div>
                     </div>
