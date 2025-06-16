@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Add google_doctor_data column to doctor_view_history table and make doctor_id nullable
+    -->
+    <changeSet id="20250616234700-1" author="developer">
+        <addColumn tableName="doctor_view_history">
+            <column name="google_doctor_data" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20250616234700-2" author="developer">
+        <dropNotNullConstraint tableName="doctor_view_history" columnName="doctor_id" columnDataType="varchar(100)"/>
+    </changeSet>
+
+</databaseChangeLog> 

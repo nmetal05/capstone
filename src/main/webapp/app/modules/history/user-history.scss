@@ -1,0 +1,181 @@
+.user-history-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem 0;
+
+  .card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
+    &.shadow-sm {
+      box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.1) !important;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+    }
+  }
+
+  .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    &.bg-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    &.bg-light {
+      background-color: #f8f9fa !important;
+    }
+  }
+
+  .nav-tabs {
+    .nav-link {
+      border: none;
+      color: #6c757d;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: #495057;
+        background-color: #f8f9fa;
+        border-color: transparent;
+      }
+
+      &.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .symptom-searches-tab,
+  .doctor-views-tab {
+    .card {
+      margin-bottom: 1.5rem;
+
+      .card-header {
+        padding: 1rem 1.25rem;
+
+        h6 {
+          font-weight: 600;
+          color: #495057;
+        }
+      }
+
+      .card-body {
+        padding: 1.25rem;
+      }
+    }
+  }
+
+  .badge {
+    font-size: 0.75em;
+    font-weight: 500;
+
+    &.badge-pill {
+      border-radius: 50rem;
+    }
+  }
+
+  .border-left-primary {
+    border-left: 4px solid #667eea !important;
+  }
+
+  .text-wrap {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .gap-2 {
+    gap: 0.5rem;
+  }
+
+  .opacity-75 {
+    opacity: 0.75;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+
+    .container-fluid {
+      padding: 0 1rem;
+    }
+
+    .nav-tabs .nav-link {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    .card-body {
+      padding: 1rem !important;
+    }
+
+    .badge {
+      font-size: 0.7em;
+    }
+  }
+
+  // Animation for expanding cards
+  .collapse {
+    transition: all 0.3s ease;
+  }
+
+  // Custom scrollbar for JSON display
+  pre {
+    max-height: 300px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
+
+  // Loading state
+  .spinner-border {
+    animation: spinner-border 0.75s linear infinite;
+  }
+
+  // Empty state styling
+  .text-center {
+    .fa-3x {
+      opacity: 0.3;
+    }
+  }
+
+  // Alert styling
+  .alert {
+    border: none;
+    border-radius: 10px;
+
+    &.alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    &.alert-warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+  }
+}

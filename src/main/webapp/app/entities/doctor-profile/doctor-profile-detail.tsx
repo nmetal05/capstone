@@ -19,6 +19,9 @@ export const DoctorProfileDetail = () => {
   }, []);
 
   const doctorProfileEntity = useAppSelector(state => state.doctorProfile.entity);
+
+  // Removed automatic tracking - only track from nearby doctors page
+
   return (
     <Row>
       <Col md="8">

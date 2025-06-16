@@ -4,6 +4,7 @@ import com.allomed.app.domain.AppUserProfile;
 import com.allomed.app.repository.AppUserProfileRepository;
 import com.allomed.app.repository.UserRepository;
 import com.allomed.app.repository.search.AppUserProfileSearchRepository;
+import com.allomed.app.security.SecurityUtils;
 import com.allomed.app.service.AppUserProfileService;
 import com.allomed.app.service.dto.AppUserProfileDTO;
 import com.allomed.app.service.mapper.AppUserProfileMapper;
@@ -114,5 +115,16 @@ public class AppUserProfileServiceImpl implements AppUserProfileService {
     public Page<AppUserProfileDTO> search(String query, Pageable pageable) {
         LOG.debug("Request to search for a page of AppUserProfiles for query {}", query);
         return appUserProfileSearchRepository.search(query, pageable).map(appUserProfileMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AppUserProfileDTO> findByCurrentUser() {
+        LOG.debug("Request to get current user's AppUserProfile");
+        return SecurityUtils.getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .map(user -> user.getId())
+            .flatMap(appUserProfileRepository::findOneByInternalUser_Id)
+            .map(appUserProfileMapper::toDto);
     }
 }

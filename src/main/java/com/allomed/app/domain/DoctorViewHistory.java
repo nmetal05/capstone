@@ -30,13 +30,16 @@ public class DoctorViewHistory implements Serializable {
     @Column(name = "view_date", nullable = false)
     private Instant viewDate;
 
+    @Lob
+    @Column(name = "google_doctor_data")
+    private String googleDoctorData; // JSON string for Google Maps doctor information
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "internalUser" }, allowSetters = true)
     private AppUserProfile user;
 
-    @ManyToOne(optional = false)
-    @NotNull
+    @ManyToOne(optional = true) // Make optional for Google Maps doctors
     @JsonIgnoreProperties(value = { "internalUser", "specializations" }, allowSetters = true)
     private DoctorProfile doctor;
 
@@ -66,6 +69,19 @@ public class DoctorViewHistory implements Serializable {
 
     public void setViewDate(Instant viewDate) {
         this.viewDate = viewDate;
+    }
+
+    public String getGoogleDoctorData() {
+        return this.googleDoctorData;
+    }
+
+    public DoctorViewHistory googleDoctorData(String googleDoctorData) {
+        this.setGoogleDoctorData(googleDoctorData);
+        return this;
+    }
+
+    public void setGoogleDoctorData(String googleDoctorData) {
+        this.googleDoctorData = googleDoctorData;
     }
 
     public AppUserProfile getUser() {

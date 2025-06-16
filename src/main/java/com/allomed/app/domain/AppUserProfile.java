@@ -49,6 +49,10 @@ public class AppUserProfile implements Serializable, Persistable<String> {
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "id")
+    @org.springframework.data.elasticsearch.annotations.Field(
+        type = org.springframework.data.elasticsearch.annotations.FieldType.Object,
+        enabled = false
+    )
     private User internalUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

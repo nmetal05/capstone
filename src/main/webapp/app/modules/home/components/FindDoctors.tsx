@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Spinner } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './styles/find-doctors.scss';
@@ -18,6 +18,8 @@ const FindDoctors: React.FC = () => {
   const [openNowOnly, setOpenNowOnly] = useState(false);
   const [sortBy, setSortBy] = useState('distance');
   const [sortDir, setSortDir] = useState('asc');
+  const [gettingLocation, setGettingLocation] = useState(false);
+  const [locationError, setLocationError] = useState('');
 
   useEffect(() => {
     // Load specializations
@@ -36,10 +38,37 @@ const FindDoctors: React.FC = () => {
       return;
     }
 
-    // Get user location (simplified - in real app you'd use geolocation API)
-    const lat = 50.0; // Default latitude
-    const lon = 30.0; // Default longitude
+    setGettingLocation(true);
+    setLocationError('');
 
+    // Try to get user's current location
+    if (!navigator.geolocation) {
+      // Fallback to default coordinates if geolocation is not supported
+      navigateToNearbyDoctors(50.0, 30.0);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        navigateToNearbyDoctors(latitude, longitude);
+      },
+      err => {
+        console.error('Geolocation error:', err);
+        setLocationError('Unable to get your location. Using default coordinates.');
+        // Fallback to default coordinates
+        navigateToNearbyDoctors(50.0, 30.0);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  };
+
+  const navigateToNearbyDoctors = (lat: number, lon: number) => {
+    setGettingLocation(false);
     navigate(
       `/doctors/nearby?spec=${encodeURIComponent(selectedSpec)}&lat=${lat}&lon=${lon}&radius=${radius}&sort=${sortBy}&dir=${sortDir}&openNow=${openNowOnly}`,
     );
@@ -105,9 +134,25 @@ const FindDoctors: React.FC = () => {
             </div>
           </FormGroup>
 
-          <Button color="primary" onClick={handleFindDoctors} className="w-100 py-2 mt-3" disabled={!selectedSpec}>
-            <i className="fas fa-search-location me-2"></i>
-            Find Doctors
+          {locationError && (
+            <div className="alert alert-warning" role="alert">
+              <i className="fas fa-exclamation-triangle me-2"></i>
+              {locationError}
+            </div>
+          )}
+
+          <Button color="primary" onClick={handleFindDoctors} className="w-100 py-2 mt-3" disabled={!selectedSpec || gettingLocation}>
+            {gettingLocation ? (
+              <>
+                <Spinner size="sm" className="me-2" />
+                Getting Location...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-search-location me-2"></i>
+                Find Doctors
+              </>
+            )}
           </Button>
         </Form>
       </div>

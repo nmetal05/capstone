@@ -1,6 +1,7 @@
 package com.allomed.app.web.rest;
 
 import com.allomed.app.repository.AppUserProfileRepository;
+import com.allomed.app.security.SecurityUtils;
 import com.allomed.app.service.AppUserProfileService;
 import com.allomed.app.service.dto.AppUserProfileDTO;
 import com.allomed.app.web.rest.errors.BadRequestAlertException;
@@ -8,6 +9,7 @@ import com.allomed.app.web.rest.errors.ElasticsearchExceptionMapper;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -208,5 +210,57 @@ public class AppUserProfileResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
+    }
+
+    /**
+     * {@code GET  /app-user-profiles/current} : get the current user's app user profile.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the appUserProfileDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/current")
+    public ResponseEntity<AppUserProfileDTO> getCurrentAppUserProfile() {
+        LOG.debug("REST request to get current user's AppUserProfile");
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new BadRequestAlertException("Current user login not found", ENTITY_NAME, "usernotfound"));
+
+        Optional<AppUserProfileDTO> appUserProfileDTO = appUserProfileService.findByCurrentUser();
+        return ResponseUtil.wrapOrNotFound(appUserProfileDTO);
+    }
+
+    /**
+     * {@code PATCH  /app-user-profiles/current/location} : update the current user's location.
+     *
+     * @param locationData the location data containing latitude and longitude.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated appUserProfileDTO.
+     */
+    @PatchMapping("/current/location")
+    public ResponseEntity<AppUserProfileDTO> updateCurrentUserLocation(@RequestBody Map<String, Double> locationData) {
+        LOG.debug("REST request to update current user's location: {}", locationData);
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new BadRequestAlertException("Current user login not found", ENTITY_NAME, "usernotfound"));
+
+        Double latitude = locationData.get("latitude");
+        Double longitude = locationData.get("longitude");
+
+        if (latitude == null || longitude == null) {
+            throw new BadRequestAlertException("Latitude and longitude are required", ENTITY_NAME, "locationrequired");
+        }
+
+        Optional<AppUserProfileDTO> currentProfile = appUserProfileService.findByCurrentUser();
+        if (currentProfile.isEmpty()) {
+            throw new BadRequestAlertException("Current user profile not found", ENTITY_NAME, "profilenotfound");
+        }
+
+        AppUserProfileDTO profileToUpdate = currentProfile.get();
+        profileToUpdate.setLatitude(latitude);
+        profileToUpdate.setLongitude(longitude);
+
+        AppUserProfileDTO updatedProfile = appUserProfileService.update(profileToUpdate);
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, updatedProfile.getId()))
+            .body(updatedProfile);
     }
 }

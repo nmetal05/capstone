@@ -73,4 +73,11 @@ public interface AppUserProfileService {
      * @return the list of entities.
      */
     Page<AppUserProfileDTO> search(String query, Pageable pageable);
+
+    /**
+     * Get the current user's app user profile.
+     *
+     * @return the entity.
+     */
+    Optional<AppUserProfileDTO> findByCurrentUser();
 }

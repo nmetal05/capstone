@@ -5,6 +5,7 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 const path = require('path');
 const sass = require('sass');
 const postcssRTLCSS = require('postcss-rtlcss');
+const fs = require('fs'); // ADD THIS LINE
 
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
@@ -13,7 +14,7 @@ const ENV = 'development';
 
 module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
-    devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
+    devtool: 'cheap-module-source-map',
     mode: ENV,
     entry: ['./src/main/webapp/app/index'],
     output: {
@@ -56,12 +57,21 @@ module.exports = async options =>
         directory: './build/resources/main/static/',
       },
       port: 9060,
+      allowedHosts: ['desktop-avlojj8.tail2f1f06.ts.net', 'localhost'],
+      // CHANGED: HTTPS now goes under 'server' property
+      server: {
+        type: 'https',
+        options: {
+          key: fs.readFileSync('C:/Users/PC/Documents/pfe/capstone/https/desktop-avlojj8.tail2f1f06.ts.net.key'),
+          cert: fs.readFileSync('C:/Users/PC/Documents/pfe/capstone/https/desktop-avlojj8.tail2f1f06.ts.net.crt'),
+        },
+      },
       proxy: [
         {
           context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console', '/auth', '/oauth2', '/login'],
-          target: `http${options.tls ? 's' : ''}://localhost:8080`,
+          target: 'https://desktop-avlojj8.tail2f1f06.ts.net:8080', // Using Tailscale hostname that matches certificate
           secure: false,
-          changeOrigin: options.tls,
+          changeOrigin: true,
         },
       ],
       historyApiFallback: true,
@@ -75,14 +85,14 @@ module.exports = async options =>
           }),
       new BrowserSyncPlugin(
         {
-          https: options.tls,
-          host: 'localhost',
+          https: true,
+          host: 'desktop-avlojj8.tail2f1f06.ts.net',
           port: 9000,
           proxy: {
-            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
+            target: 'https://desktop-avlojj8.tail2f1f06.ts.net:9060',
             ws: true,
             proxyOptions: {
-              changeOrigin: false, //pass the Host header to the backend unchanged https://github.com/Browsersync/browser-sync/issues/430
+              changeOrigin: false,
             },
           },
           socket: {
@@ -90,13 +100,6 @@ module.exports = async options =>
               heartbeatTimeout: 60000,
             },
           },
-          /*
-      ,ghostMode: { // uncomment this part to disable BrowserSync ghostMode; https://github.com/jhipster/generator-jhipster/issues/11116
-        clicks: false,
-        location: false,
-        forms: false,
-        scroll: false
-      } */
         },
         {
           reload: false,

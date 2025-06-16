@@ -156,3 +156,4 @@ coverage/
 # ENV file
 ######################
 .env
+https/

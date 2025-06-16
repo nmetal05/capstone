@@ -16,10 +16,11 @@ public class DoctorViewHistoryDTO implements Serializable {
     @NotNull
     private Instant viewDate;
 
+    private String googleDoctorData;
+
     @NotNull
     private AppUserProfileDTO user;
 
-    @NotNull
     private DoctorProfileDTO doctor;
 
     public Long getId() {
@@ -36,6 +37,14 @@ public class DoctorViewHistoryDTO implements Serializable {
 
     public void setViewDate(Instant viewDate) {
         this.viewDate = viewDate;
+    }
+
+    public String getGoogleDoctorData() {
+        return googleDoctorData;
+    }
+
+    public void setGoogleDoctorData(String googleDoctorData) {
+        this.googleDoctorData = googleDoctorData;
     }
 
     public AppUserProfileDTO getUser() {
@@ -81,6 +90,7 @@ public class DoctorViewHistoryDTO implements Serializable {
         return "DoctorViewHistoryDTO{" +
             "id=" + getId() +
             ", viewDate='" + getViewDate() + "'" +
+            ", googleDoctorData='" + getGoogleDoctorData() + "'" +
             ", user=" + getUser() +
             ", doctor=" + getDoctor() +
             "}";

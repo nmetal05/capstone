@@ -15,6 +15,7 @@ const CompleteDoctorProfile = Loadable({ loader: () => import('app/modules/profi
 const LoginRedirect = Loadable({ loader: () => import('app/modules/login/login-redirect'), loading: () => loading });
 const Logout = Loadable({ loader: () => import('app/modules/login/logout'), loading: () => loading });
 const Home = Loadable({ loader: () => import('app/modules/home/home'), loading: () => loading });
+const UserHistory = Loadable({ loader: () => import('app/modules/history/user-history'), loading: () => loading });
 const AccountManage = Loadable({ loader: () => import('app/modules/account'), loading: () => loading });
 const EntitiesRoutes = Loadable({ loader: () => import('app/entities/routes'), loading: () => loading });
 const PageNotFound = Loadable({ loader: () => import('app/shared/error/page-not-found'), loading: () => loading });
@@ -31,6 +32,16 @@ const AppRoutes = () => (
         element={
           <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER, AUTHORITIES.ADMIN]}>
             <NearbyDoctors />
+          </PrivateRoute>
+        }
+      />
+
+      {/* User History */}
+      <Route
+        path="history"
+        element={
+          <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER, AUTHORITIES.ADMIN, AUTHORITIES.APP_USER]}>
+            <UserHistory />
           </PrivateRoute>
         }
       />

@@ -46,6 +46,12 @@ public class DoctorProfile implements Serializable, Persistable<String> {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
+    // Elasticsearch geo-point field for location-based queries
+    @Transient // JPA transient - not persisted to database
+    @org.springframework.data.annotation.Transient // Spring Data transient
+    @org.springframework.data.elasticsearch.annotations.GeoPointField
+    private org.springframework.data.elasticsearch.core.geo.GeoPoint location;
+
     @NotNull
     @Column(name = "inpe_code", nullable = false, unique = true)
     @org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Text)
@@ -138,6 +144,7 @@ public class DoctorProfile implements Serializable, Persistable<String> {
 
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
+        updateLocation();
     }
 
     public Double getLongitude() {
@@ -151,6 +158,24 @@ public class DoctorProfile implements Serializable, Persistable<String> {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+        updateLocation();
+    }
+
+    public org.springframework.data.elasticsearch.core.geo.GeoPoint getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(org.springframework.data.elasticsearch.core.geo.GeoPoint location) {
+        this.location = location;
+    }
+
+    /**
+     * Update the Elasticsearch geo-point location field when latitude or longitude changes.
+     */
+    private void updateLocation() {
+        if (this.latitude != null && this.longitude != null) {
+            this.location = new org.springframework.data.elasticsearch.core.geo.GeoPoint(this.latitude, this.longitude);
+        }
     }
 
     public String getInpeCode() {
@@ -222,6 +247,7 @@ public class DoctorProfile implements Serializable, Persistable<String> {
     @PostPersist
     public void updateEntityState() {
         this.setIsPersisted();
+        this.updateLocation(); // Ensure geo-point is set for Elasticsearch
     }
 
     @org.springframework.data.annotation.Transient

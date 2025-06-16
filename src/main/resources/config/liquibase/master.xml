@@ -23,6 +23,7 @@
     <include file="config/liquibase/changelog/20250426140915_added_entity_GuestSession.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140916_added_entity_DoctorViewHistory.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140917_added_entity_DoctorAvailability.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20250616234700_add_google_doctor_data_to_doctor_view_history.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20250426140909_added_entity_constraints_AppUserProfile.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20250426140910_added_entity_constraints_DoctorProfile.xml" relativeToChangelogFile="false"/>

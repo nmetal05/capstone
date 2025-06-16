@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Button, Form } from 'reactstrap';
 import axios from 'axios';
+import dayjs from 'dayjs';
 import './styles/symptom-analysis.scss';
 
 interface Suggestion {
@@ -19,6 +20,70 @@ const SymptomAnalysis: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const saveSymptomSearch = async (symptomText: string, aiResponse: ApiResponse) => {
+    try {
+      // Get current user's profile - try the current endpoint first
+      let currentUserProfile = null;
+      try {
+        const currentProfileResponse = await axios.get('/api/app-user-profiles/current');
+        currentUserProfile = currentProfileResponse.data;
+      } catch (err) {
+        console.log('No current user profile found, user might not have an AppUserProfile yet');
+        // For now, we'll skip saving if user doesn't have a profile
+        // In the future, we could create one automatically or save to guest session
+        return;
+      }
+
+      if (!currentUserProfile) {
+        console.log('No user profile available, skipping symptom search save');
+        return;
+      }
+
+      // Save the symptom search
+      const symptomSearchData = {
+        searchDate: dayjs().toISOString(),
+        symptoms: symptomText,
+        aiResponseJson: JSON.stringify(aiResponse),
+        user: { id: currentUserProfile.id },
+        guestSession: null,
+      };
+
+      const searchResponse = await axios.post('/api/symptom-searches', symptomSearchData);
+      const searchId = searchResponse.data.id;
+
+      // Then, save the recommendations
+      if (aiResponse.suggestions && aiResponse.suggestions.length > 0) {
+        // First, get all specializations to map names to IDs
+        const specializationsResponse = await axios.get('/api/specializations?size=1000');
+        const specializations = specializationsResponse.data;
+
+        for (let i = 0; i < aiResponse.suggestions.length; i++) {
+          const suggestion = aiResponse.suggestions[i];
+
+          // Find the specialization by name
+          const specialization = specializations.find((spec: any) => spec.name.toLowerCase() === suggestion.specialization.toLowerCase());
+
+          if (specialization) {
+            const recommendationData = {
+              confidenceScore: suggestion.confidence,
+              rank: i + 1,
+              reasoning: suggestion.reason,
+              search: { id: searchId },
+              specialization: { id: specialization.id },
+            };
+
+            await axios.post('/api/symptom-search-recommendations', recommendationData);
+          }
+        }
+      }
+
+      console.log('Symptom search and recommendations saved successfully');
+    } catch (err) {
+      console.error('Failed to save symptom search history:', err);
+      // Don't show error to user as this is background functionality
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!symptoms.trim()) {
@@ -34,6 +99,9 @@ const SymptomAnalysis: React.FC = () => {
         symptoms,
       });
       setSuggestions(response.data.suggestions);
+
+      // Save to history in the background
+      await saveSymptomSearch(symptoms, response.data);
     } catch (err) {
       setError('Failed to analyze symptoms. Please try again later.');
       console.error('API Error:', err);
